@@ -3,6 +3,7 @@ import * as path from 'node:path';
 import type { Plugin, ViteDevServer } from 'vite';
 import { compile } from '@mdx-js/mdx';
 import remarkFrontmatter from 'remark-frontmatter';
+import remarkGfm from 'remark-gfm';
 import rehypeSlug from 'rehype-slug';
 import { visit } from 'unist-util-visit';
 import matter from 'gray-matter';
@@ -128,7 +129,7 @@ export const headings = [];`;
         const headings: Heading[] = [];
 
         const compiled = await compile(raw, {
-          remarkPlugins: [remarkFrontmatter, remarkExtractHeadings(headings)],
+          remarkPlugins: [remarkFrontmatter, remarkGfm, remarkExtractHeadings(headings)],
           rehypePlugins: [rehypeSlug],
           providerImportSource: '@mdx-js/react',
         });
