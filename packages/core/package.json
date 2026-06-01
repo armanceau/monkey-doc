@@ -1,11 +1,37 @@
 {
   "name": "@monkey-doc/core",
   "version": "0.1.0",
+  "description": "Core utilities for Monkey-Doc — MDX parsing and filesystem scanning",
+  "license": "MIT",
+  "author": "Arthur Manceau",
+  "homepage": "https://github.com/armanceau/monkey-doc#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/armanceau/monkey-doc.git"
+  },
+  "bugs": {
+    "url": "https://github.com/armanceau/monkey-doc/issues"
+  },
+  "keywords": [
+    "monkey-doc",
+    "mdx",
+    "documentation"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsc",
-    "dev": "tsc -w"
+    "dev": "tsc -w",
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "gray-matter": "^4.0.3"

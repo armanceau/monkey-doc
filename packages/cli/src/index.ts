@@ -61,12 +61,11 @@ program
   .description('Start the documentation development server')
   .action(() => {
     const cwd = process.cwd();
-    const webDir = path.resolve(__dirname, '..', '..', 'web');
-
-    if (!fs.existsSync(webDir)) {
-      console.error(
-        'Could not find @monkey-doc/web package at: ' + webDir
-      );
+    let webDir: string;
+    try {
+      webDir = path.dirname(require.resolve('@monkey-doc/web/package.json'));
+    } catch {
+      console.error('Could not find @monkey-doc/web. Try reinstalling monkey-doc.');
       process.exit(1);
     }
 

@@ -6,8 +6,8 @@ import remarkFrontmatter from 'remark-frontmatter';
 import rehypeSlug from 'rehype-slug';
 import { visit } from 'unist-util-visit';
 import matter from 'gray-matter';
-import { scanDocs, buildNavTree } from '../../../core/src/file-scanner';
-import type { Heading } from '../../../core/src/types';
+import { scanDocs, buildNavTree } from '@monkey-doc/core';
+import type { Heading } from '@monkey-doc/core';
 
 const MANIFEST_ID = 'virtual:docs-manifest';
 const MANIFEST_RESOLVED = '\0virtual:docs-manifest';

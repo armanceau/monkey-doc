@@ -8,6 +8,10 @@
     "build:core": "npm run build -w packages/core",
     "build:cli": "npm run build -w packages/cli",
     "build": "npm run build:core && npm run build:cli",
-    "dev:web": "npm run dev -w packages/web"
+    "dev:web": "npm run dev -w packages/web",
+    "publish:core": "npm publish -w packages/core",
+    "publish:web": "npm publish -w packages/web",
+    "publish:cli": "npm publish -w packages/cli",
+    "publish:all": "npm run build && npm run publish:core && npm run publish:web && npm run publish:cli"
   }
 }
