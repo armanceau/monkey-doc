@@ -79,11 +79,11 @@ program
     console.log('Docs: ' + docsDir);
     console.log('Server: http://localhost:5173\n');
 
-    const isWindows = process.platform === 'win32';
-    const child = spawn(isWindows ? 'npm.cmd' : 'npm', ['run', 'dev'], {
+    const child = spawn('npm', ['run', 'dev'], {
       cwd: webDir,
       env: { ...process.env, MONKEY_DOC_PATH: cwd },
       stdio: 'inherit',
+      shell: true,
     });
 
     child.on('close', (code) => {
