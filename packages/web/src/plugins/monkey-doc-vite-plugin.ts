@@ -101,7 +101,7 @@ export function monkeyDocPlugin(projectPath: string): Plugin {
           .join(',\n');
 
         const docsMap = files
-          .map((f) => `  ${JSON.stringify(f.slug)}: { title: ${JSON.stringify(f.title)}, path: ${JSON.stringify(f.path)} }`)
+          .map((f) => `  ${JSON.stringify(f.slug)}: { title: ${JSON.stringify(f.title)}, path: ${JSON.stringify(f.path)}, order: ${f.order} }`)
           .join(',\n');
 
         return [

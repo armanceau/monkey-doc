@@ -12,6 +12,7 @@ export interface NavNode {
   slug: string;
   children: NavNode[];
   isFolder: boolean;
+  order: number;
 }
 
 export interface Heading {

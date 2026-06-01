@@ -41,18 +41,26 @@ export function App() {
   const { isDark, toggle } = useDarkMode();
   const { lang, switchLang } = useLang();
 
+  const orderBySlug = new Map(allDocsList.map((d) => [d.slug, d.order]));
+
+  function navOrder(node: { slug: string; isFolder: boolean; children: { slug: string }[] }): number {
+    if (!node.isFolder) return orderBySlug.get(node.slug) ?? 999;
+    const min = Math.min(...node.children.map((c) => orderBySlug.get(c.slug) ?? 999));
+    return isFinite(min) ? min : 999;
+  }
+
   const filteredNav = lang
     ? [
         ...nav.filter((n) => !config.languages.includes(n.slug)),
         ...(nav.find((n) => n.isFolder && n.slug === lang)?.children ?? []),
-      ]
+      ].sort((a, b) => navOrder(a) - navOrder(b) || a.title.localeCompare(b.title))
     : nav;
 
   const docsList = lang
     ? [
         ...allDocsList.filter((d) => !config.languages.some((l) => d.slug.startsWith(l + '/'))),
         ...allDocsList.filter((d) => d.slug.startsWith(lang + '/')),
-      ]
+      ].sort((a, b) => a.order - b.order || a.title.localeCompare(b.title))
     : allDocsList;
 
   const firstDocPath = docsList[0]?.path ?? '/';

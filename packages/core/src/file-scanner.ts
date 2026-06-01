@@ -83,6 +83,7 @@ export function buildNavTree(files: DocFile[]): NavNode[] {
           slug: folderSlug,
           children: [],
           isFolder: true,
+          order: 999,
         };
         current.push(node);
       }
@@ -95,6 +96,7 @@ export function buildNavTree(files: DocFile[]): NavNode[] {
       slug: file.slug,
       children: [],
       isFolder: false,
+      order: file.order,
     });
   }
 
