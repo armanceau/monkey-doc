@@ -59,7 +59,7 @@ export function Header({
 
   return (
     <>
-      <header className="sticky top-0 z-20 flex h-14 items-center justify-between border-b border-border bg-background/90 px-5 backdrop-blur">
+      <header className="sticky top-0 z-20 flex h-16 items-center justify-between border-b border-border bg-background/90 px-5 backdrop-blur">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-1.5 text-[13px] text-muted-foreground min-w-0">
           {breadcrumb.map((node, i) => (

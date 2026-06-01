@@ -9,6 +9,7 @@ import type { DocModule } from '../types';
 interface DocPageProps {
   docImporters: Record<string, () => Promise<DocModule>>;
   docsList: Array<{ slug: string; title: string; path: string }>;
+  lang?: string | null;
 }
 
 function PageSkeleton() {
@@ -39,7 +40,7 @@ function NotFound({ slug }: { slug: string }) {
   );
 }
 
-export function DocPage({ docImporters, docsList }: DocPageProps) {
+export function DocPage({ docImporters, docsList, lang }: DocPageProps) {
   const { '*': slug = '' } = useParams();
   const [mod, setMod] = useState<DocModule | null>(null);
   const [loading, setLoading] = useState(true);
@@ -70,7 +71,7 @@ export function DocPage({ docImporters, docsList }: DocPageProps) {
 
   return (
     <>
-      <TableOfContents headings={mod.headings ?? []} />
+      <TableOfContents headings={mod.headings ?? []} lang={lang} />
       <article className="px-8 lg:px-12 py-12 max-w-3xl mx-auto">
         <div className="prose prose-DEFAULT dark:prose-dark max-w-none">
           <Component />

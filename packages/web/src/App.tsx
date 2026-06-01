@@ -84,7 +84,7 @@ export function App() {
             <Route
               path="/*"
               element={
-                <DocPage docImporters={docImporters} docsList={docsList} />
+                <DocPage docImporters={docImporters} docsList={docsList} lang={lang} />
               }
             />
           </Routes>

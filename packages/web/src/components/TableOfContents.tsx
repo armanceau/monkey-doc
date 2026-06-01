@@ -3,11 +3,30 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import type { Heading } from '../types';
 
+const tocLabel: Record<string, string> = {
+  en: 'On this page',
+  fr: 'Sur cette page',
+  de: 'Auf dieser Seite',
+  es: 'En esta página',
+  pt: 'Nesta página',
+  ja: 'このページ',
+  zh: '本页内容',
+  ko: '이 페이지에서',
+  it: 'In questa pagina',
+  ru: 'На этой странице',
+  nl: 'Op deze pagina',
+  pl: 'Na tej stronie',
+  tr: 'Bu sayfada',
+  vi: 'Trên trang này',
+  ar: 'في هذه الصفحة',
+};
+
 interface TocProps {
   headings: Heading[];
+  lang?: string | null;
 }
 
-export function TableOfContents({ headings }: TocProps) {
+export function TableOfContents({ headings, lang }: TocProps) {
   const [activeId, setActiveId] = useState<string>('');
 
   const filtered = headings.filter((h) => h.level === 2 || h.level === 3);
@@ -32,10 +51,10 @@ export function TableOfContents({ headings }: TocProps) {
   if (filtered.length === 0) return null;
 
   return (
-    <aside className="fixed top-0 right-0 hidden h-screen w-[220px] xl:flex flex-col border-l border-border bg-card">
-      <ScrollArea className="flex-1 px-5 py-8">
+    <aside className="fixed top-16 right-0 hidden h-[calc(100vh-4rem)] w-[220px] xl:flex flex-col border-l border-border bg-card">
+      <ScrollArea className="flex-1 px-5 py-6">
         <p className="mb-2 font-mono text-[11px] font-[400] uppercase tracking-[0.06em] text-muted-foreground">
-          On this page
+          {(lang && tocLabel[lang]) || tocLabel.en}
         </p>
         <Separator className="mb-3" />
         <nav className="space-y-0.5">
