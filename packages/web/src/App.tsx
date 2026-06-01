@@ -30,7 +30,7 @@ export function App() {
   return (
     <MDXProvider components={mdxComponents}>
       <BrowserRouter>
-        <Layout nav={nav} title={config.title} onToggleDark={toggle} isDark={isDark}>
+        <Layout nav={nav} title={config.title} onToggleDark={toggle} isDark={isDark} docsList={docsList}>
           <Routes>
             <Route path="/" element={<Navigate to={firstDocPath} replace />} />
             <Route
