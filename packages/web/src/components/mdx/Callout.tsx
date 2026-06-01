@@ -19,7 +19,7 @@ const variants: Record<CalloutType, { classes: string; icon: string }> = {
     icon: '!',
   },
   success: {
-    classes: 'border-[#0070f3]/20 bg-[#d3e5ff] text-[#0761d1] dark:bg-[#0070f3]/10 dark:text-[#6cb8ff]',
+    classes: 'border-emerald-500/20 bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400',
     icon: '✓',
   },
 };

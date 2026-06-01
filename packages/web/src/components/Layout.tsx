@@ -12,9 +12,16 @@ interface LayoutProps {
   onToggleDark: () => void;
   isDark: boolean;
   docsList: Array<{ slug: string; title: string; path: string }>;
+  lang: string | null;
+  languages: string[];
+  github?: string;
+  onSwitchLang: (code: string) => void;
 }
 
-export function Layout({ nav, title, children, onToggleDark, isDark, docsList }: LayoutProps) {
+export function Layout({
+  nav, title, children, onToggleDark, isDark,
+  docsList, lang, languages, github, onSwitchLang,
+}: LayoutProps) {
   return (
     <SidebarProvider>
       <ReadingProgress />
@@ -25,6 +32,10 @@ export function Layout({ nav, title, children, onToggleDark, isDark, docsList }:
           isDark={isDark}
           nav={nav}
           docsList={docsList}
+          lang={lang}
+          languages={languages}
+          github={github}
+          onSwitchLang={onSwitchLang}
         />
         <div className="xl:pr-[220px]">
           {children}

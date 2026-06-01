@@ -6,8 +6,7 @@ import { DocPage } from './components/DocPage';
 import { mdxComponents } from './components/mdx';
 import { nav, docs, docImporters, config } from 'virtual:docs-manifest';
 
-const docsList = Object.entries(docs).map(([slug, d]) => ({ slug, ...d }));
-const firstDocPath = docsList[0]?.path ?? '/';
+const allDocsList = Object.entries(docs).map(([slug, d]) => ({ slug, ...d }));
 
 function useDarkMode() {
   const [isDark, setIsDark] = useState(() => {
@@ -24,13 +23,48 @@ function useDarkMode() {
   return { isDark, toggle: () => setIsDark((d) => !d) };
 }
 
+function useLang() {
+  const [lang, setLang] = useState<string | null>(() => {
+    if (config.languages.length === 0) return null;
+    return localStorage.getItem('monkey-doc-lang') || config.defaultLanguage || config.languages[0];
+  });
+
+  function switchLang(code: string) {
+    setLang(code);
+    localStorage.setItem('monkey-doc-lang', code);
+  }
+
+  return { lang, switchLang };
+}
+
 export function App() {
   const { isDark, toggle } = useDarkMode();
+  const { lang, switchLang } = useLang();
+
+  const filteredNav = lang
+    ? (nav.find((n) => n.isFolder && n.slug === lang)?.children ?? [])
+    : nav;
+
+  const docsList = lang
+    ? allDocsList.filter((d) => d.slug.startsWith(lang + '/'))
+    : allDocsList;
+
+  const firstDocPath = docsList[0]?.path ?? '/';
 
   return (
     <MDXProvider components={mdxComponents}>
       <BrowserRouter>
-        <Layout nav={nav} title={config.title} onToggleDark={toggle} isDark={isDark} docsList={docsList}>
+        <Layout
+          nav={filteredNav}
+          title={config.title}
+          onToggleDark={toggle}
+          isDark={isDark}
+          docsList={docsList}
+          lang={lang}
+          languages={config.languages}
+          github={config.github}
+          onSwitchLang={switchLang}
+        >
           <Routes>
             <Route path="/" element={<Navigate to={firstDocPath} replace />} />
             <Route

@@ -35,16 +35,31 @@ function remarkExtractHeadings(headings: Heading[]) {
   };
 }
 
-async function loadConfig(projectPath: string): Promise<{ title: string; description?: string }> {
+const LOCALE_CODES = new Set(['en', 'fr', 'de', 'es', 'pt', 'ja', 'zh', 'ko', 'it', 'ru', 'nl', 'pl', 'tr', 'vi', 'ar']);
+
+function detectLanguages(docsDir: string): string[] {
+  if (!fs.existsSync(docsDir)) return [];
+  try {
+    return fs.readdirSync(docsDir, { withFileTypes: true })
+      .filter(e => e.isDirectory() && LOCALE_CODES.has(e.name))
+      .map(e => e.name);
+  } catch { return []; }
+}
+
+async function loadConfig(projectPath: string): Promise<{ title: string; description?: string; github?: string; defaultLanguage?: string }> {
   const configPath = path.join(projectPath, 'monkey-doc.config.ts');
   if (fs.existsSync(configPath)) {
     try {
       const raw = fs.readFileSync(configPath, 'utf-8');
-      const titleMatch = raw.match(/title:\s*['"](.+?)['"]/);
-      const descMatch = raw.match(/description:\s*['"](.+?)['"]/);
+      const titleMatch = raw.match(/title:\s*['"`]([^'"`\n]+)['"`]/);
+      const descMatch = raw.match(/description:\s*['"`]([^'"`\n]+)['"`]/);
+      const githubMatch = raw.match(/github:\s*['"`]([^'"`\n]+)['"`]/);
+      const defaultLangMatch = raw.match(/defaultLanguage:\s*['"`]([^'"`\n]+)['"`]/);
       return {
         title: titleMatch?.[1] ?? 'Documentation',
         description: descMatch?.[1],
+        github: githubMatch?.[1],
+        defaultLanguage: defaultLangMatch?.[1],
       };
     } catch {
       // fall through
@@ -79,6 +94,7 @@ export function monkeyDocPlugin(projectPath: string): Plugin {
         const files = scanDocs(docsDir);
         const nav = buildNavTree(files);
         const config = await loadConfig(projectPath);
+        const languages = detectLanguages(docsDir);
 
         const importers = files
           .map((f) => `  ${JSON.stringify(f.slug)}: () => import(${JSON.stringify(DOC_PREFIX + f.slug)})`)
@@ -92,7 +108,7 @@ export function monkeyDocPlugin(projectPath: string): Plugin {
           `export const nav = ${JSON.stringify(nav)};`,
           `export const docs = {\n${docsMap}\n};`,
           `export const docImporters = {\n${importers}\n};`,
-          `export const config = ${JSON.stringify(config)};`,
+          `export const config = ${JSON.stringify({ ...config, languages })};`,
         ].join('\n');
       }
 
