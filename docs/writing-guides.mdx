@@ -1,0 +1,45 @@
+---
+title: Writing Guides
+order: 3
+---
+
+# Writing Guides
+
+Monkey-Doc uses **MDX** — Markdown with JSX components.
+
+Write plain Markdown and sprinkle in rich components wherever you need them.
+
+## Basic markdown
+
+All standard Markdown syntax works out of the box:
+
+- **Bold**, _italic_, `inline code`
+- [Links](https://example.com)
+- Images: `![alt](url)`
+- Tables, blockquotes, horizontal rules
+
+## Frontmatter
+
+Every page supports YAML frontmatter:
+
+```yaml
+---
+title: My Page Title
+order: 1
+---
+```
+
+- **title** — overrides the filename as the page title
+- **order** — controls navigation order (lower = first)
+
+## Using components
+
+Import is not required — all built-in components are globally available.
+
+```mdx
+<Callout type="warning">
+  Watch out for this edge case!
+</Callout>
+```
+
+See [Components](/components) for the full component reference.

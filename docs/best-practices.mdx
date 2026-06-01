@@ -1,0 +1,47 @@
+---
+title: Best Practices
+order: 5
+---
+
+# Best Practices
+
+Tips for writing great documentation with Monkey-Doc.
+
+## Structure your docs like a story
+
+Good documentation flows. Each page should answer one question clearly.
+
+<Callout type="info">
+  Think of each guide as a short article — one idea, clear flow, concrete examples.
+</Callout>
+
+## Use the right component
+
+| Need | Component |
+|------|-----------|
+| Important note | `<Callout>` |
+| Sequential process | `<Steps>` |
+| Multiple options | `<Tabs>` |
+| Feature highlight | `<Card>` |
+| Code sample | fenced code block |
+
+## Folder structure
+
+Organise docs with folders for sections:
+
+```
+docs/
+  getting-started.mdx
+  installation.mdx
+  guides/
+    writing-docs.mdx
+    components.mdx
+  reference/
+    api.mdx
+```
+
+Folders appear as collapsible sections in the sidebar.
+
+## Frontmatter matters
+
+Always set `title` and `order` in frontmatter — they control what users see in navigation.

@@ -1,0 +1,59 @@
+---
+title: Components
+order: 4
+---
+
+# Components
+
+Monkey-Doc ships with a set of built-in MDX components you can use anywhere.
+
+## Callout
+
+Highlight important information.
+
+<Callout type="info">This is an **info** callout.</Callout>
+
+<Callout type="warning">This is a **warning** callout.</Callout>
+
+<Callout type="success">This is a **success** callout.</Callout>
+
+```mdx
+<Callout type="info">Your message here.</Callout>
+```
+
+## Steps
+
+Walk users through a sequence.
+
+<Steps>
+  <Step title="First step">Do this first.</Step>
+  <Step title="Second step">Then do this.</Step>
+  <Step title="Third step">Finally, do this.</Step>
+</Steps>
+
+```mdx
+<Steps>
+  <Step title="First step">Do this first.</Step>
+  <Step title="Second step">Then do this.</Step>
+</Steps>
+```
+
+## Card
+
+Group related content visually.
+
+<Card title="Quick tip" description="Cards are great for feature highlights or link grids." />
+
+```mdx
+<Card title="Quick tip" description="Your description here." />
+```
+
+## Tabs
+
+Display content in tabbed panels.
+
+<Tabs labels={["npm", "yarn", "pnpm"]}>
+  <div><code>npm install monkey-doc</code></div>
+  <div><code>yarn add monkey-doc</code></div>
+  <div><code>pnpm add monkey-doc</code></div>
+</Tabs>

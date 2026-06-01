@@ -1,0 +1,13 @@
+{
+  "name": "monkey-doc-workspace",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build:core": "npm run build -w packages/core",
+    "build:cli": "npm run build -w packages/cli",
+    "build": "npm run build:core && npm run build:cli",
+    "dev:web": "npm run dev -w packages/web"
+  }
+}

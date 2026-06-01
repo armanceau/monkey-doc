@@ -1,0 +1,21 @@
+{
+  "name": "monkey-doc",
+  "version": "0.1.0",
+  "description": "A beautiful documentation tool — alternative to Storybook",
+  "bin": {
+    "monkey-doc": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc -w"
+  },
+  "dependencies": {
+    "@monkey-doc/core": "*",
+    "chalk": "^5.3.0",
+    "commander": "^11.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}
