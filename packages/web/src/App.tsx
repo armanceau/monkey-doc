@@ -42,11 +42,17 @@ export function App() {
   const { lang, switchLang } = useLang();
 
   const filteredNav = lang
-    ? (nav.find((n) => n.isFolder && n.slug === lang)?.children ?? [])
+    ? [
+        ...nav.filter((n) => !config.languages.includes(n.slug)),
+        ...(nav.find((n) => n.isFolder && n.slug === lang)?.children ?? []),
+      ]
     : nav;
 
   const docsList = lang
-    ? allDocsList.filter((d) => d.slug.startsWith(lang + '/'))
+    ? [
+        ...allDocsList.filter((d) => !config.languages.some((l) => d.slug.startsWith(l + '/'))),
+        ...allDocsList.filter((d) => d.slug.startsWith(lang + '/')),
+      ]
     : allDocsList;
 
   const firstDocPath = docsList[0]?.path ?? '/';
