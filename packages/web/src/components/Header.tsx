@@ -13,11 +13,11 @@ export function Header({ onToggleDark, isDark }: HeaderProps) {
       <Button
         variant="outline"
         size="icon"
-        className="h-7 w-7 rounded-full border-border"
+        className="size-7 rounded-full border-border"
         onClick={onToggleDark}
         aria-label="Toggle dark mode"
       >
-        {isDark ? <Sun className="h-[14px] w-[14px]" /> : <Moon className="h-[14px] w-[14px]" />}
+        {isDark ? <Sun className="size-[14px]" /> : <Moon className="size-[14px]" />}
       </Button>
     </header>
   );

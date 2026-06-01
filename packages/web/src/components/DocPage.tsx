@@ -13,7 +13,7 @@ interface DocPageProps {
 
 function PageSkeleton() {
   return (
-    <div className="px-10 py-14 max-w-3xl mx-auto space-y-4">
+    <div className="px-10 py-14 max-w-3xl mx-auto flex flex-col gap-4">
       <Skeleton className="h-9 w-1/2" />
       <Skeleton className="h-5 w-5/6" />
       <Skeleton className="h-5 w-3/4" />
@@ -81,7 +81,7 @@ export function DocPage({ docImporters, docsList }: DocPageProps) {
             {prev ? (
               <Button
                 variant="outline"
-                className="flex h-auto flex-col items-start gap-1 px-4 py-3 max-w-[48%] shadow-card-2"
+                className="flex h-auto flex-col items-start gap-1 px-4 py-3 max-w-[48%] shadow-sm"
                 asChild
               >
                 <Link to={prev.path}>
@@ -98,7 +98,7 @@ export function DocPage({ docImporters, docsList }: DocPageProps) {
             {next ? (
               <Button
                 variant="outline"
-                className="flex h-auto flex-col items-end gap-1 px-4 py-3 max-w-[48%] shadow-card-2 ml-auto"
+                className="flex h-auto flex-col items-end gap-1 px-4 py-3 max-w-[48%] shadow-sm ml-auto"
                 asChild
               >
                 <Link to={next.path}>

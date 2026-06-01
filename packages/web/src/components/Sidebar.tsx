@@ -33,13 +33,13 @@ function NavItem({ node }: { node: NavNode }) {
       <SidebarMenuItem>
         <SidebarMenuButton
           onClick={() => setOpen((o) => !o)}
-          className="text-muted-foreground/70 hover:text-foreground"
+          className="text-muted-foreground/70"
         >
           <span className="font-mono text-[11px] uppercase tracking-[0.06em] flex-1">
             {node.title}
           </span>
           <ChevronRight
-            className={`h-3.5 w-3.5 shrink-0 transition-transform duration-150 ${open ? 'rotate-90' : ''}`}
+            className={`size-3.5 shrink-0 transition-transform duration-150 ${open ? 'rotate-90' : ''}`}
           />
         </SidebarMenuButton>
         {open && (

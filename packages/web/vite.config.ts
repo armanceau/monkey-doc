@@ -2,10 +2,16 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { monkeyDocPlugin } from './src/plugins/monkey-doc-vite-plugin';
 import path from 'node:path';
+import { createRequire } from 'node:module';
 
-// Default: 2 levels up from packages/web → monorepo root (has docs/ folder)
-// CLI dev command overrides this with MONKEY_DOC_PATH=<user project>
+const _require = createRequire(import.meta.url);
+
 const projectPath = process.env.MONKEY_DOC_PATH ?? path.resolve(__dirname, '..', '..');
+
+// Force Vite to always use monkey-doc's own React, not the host project's React.
+// Without this, Vite can pick up a different React version (e.g. React 17 without createRoot).
+const reactRoot = path.dirname(_require.resolve('react/package.json'));
+const reactDomRoot = path.dirname(_require.resolve('react-dom/package.json'));
 
 export default defineConfig({
   plugins: [
@@ -13,11 +19,16 @@ export default defineConfig({
     monkeyDocPlugin(projectPath),
   ],
   resolve: {
-    alias: { '@': path.resolve(__dirname, './src') },
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+      'react': reactRoot,
+      'react-dom': reactDomRoot,
+    },
+    dedupe: ['react', 'react-dom'],
   },
   server: {
     fs: {
-      allow: [projectPath, path.resolve(__dirname)],
+      allow: [projectPath, path.resolve(__dirname), reactRoot, reactDomRoot],
     },
   },
   optimizeDeps: {

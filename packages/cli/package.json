@@ -1,6 +1,6 @@
 {
   "name": "monkey-doc",
-  "version": "0.1.1",
+  "version": "0.1.8",
   "description": "A narrative-first documentation tool — a beautiful alternative to Storybook",
   "license": "MIT",
   "author": "Arthur Manceau",
@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "@monkey-doc/core": "^0.1.0",
-    "@monkey-doc/web": "^0.1.0",
+    "@monkey-doc/web": "^0.1.8",
     "chalk": "^5.3.0",
     "commander": "^11.1.0"
   },
