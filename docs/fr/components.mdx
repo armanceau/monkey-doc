@@ -145,3 +145,54 @@ Sections repliables, idéales pour les FAQ ou les détails optionnels.
   Celui-ci commence déplié.
 </Accordion>
 ```
+
+## Badge
+
+Étiquettes inline pour le statut, le versioning ou la catégorisation.
+
+<div className="flex flex-wrap gap-2 my-4">
+  <Badge>Default</Badge>
+  <Badge variant="info">Info</Badge>
+  <Badge variant="success">Succès</Badge>
+  <Badge variant="warning">Attention</Badge>
+  <Badge variant="error">Erreur</Badge>
+  <Badge variant="new">Nouveau</Badge>
+  <Badge variant="beta">Beta</Badge>
+  <Badge variant="deprecated">Déprécié</Badge>
+</div>
+
+Les badges s'utilisent aussi en ligne dans le texte — par exemple, cette fonctionnalité est <Badge variant="new">Nouvelle</Badge> en v2.
+
+```mdx
+<Badge variant="new">Nouveau</Badge>
+<Badge variant="beta">Beta</Badge>
+<Badge variant="deprecated">Déprécié</Badge>
+```
+
+Variantes disponibles : `default` · `info` · `success` · `warning` · `error` · `new` · `beta` · `deprecated`
+
+## Mermaid
+
+Rendu de diagrammes depuis la syntaxe [Mermaid](https://mermaid.js.org). Utilisez un bloc de code avec le langage `mermaid`, ou le composant `<Mermaid>` directement.
+
+```mermaid
+flowchart LR
+  A[Écrire du MDX] --> B[Lancer monkey-doc dev]
+  B --> C{Satisfait ?}
+  C -- Oui --> D[Déployer 🚀]
+  C -- Non --> A
+```
+
+```mermaid
+sequenceDiagram
+  Développeur->>monkey-doc: npx monkey-doc dev
+  monkey-doc->>Navigateur: Sert les docs sur localhost:5173
+  Navigateur-->>Développeur: Aperçu en direct avec hot reload
+```
+
+~~~mdx
+```mermaid
+flowchart LR
+  A[Début] --> B[Fin]
+```
+~~~

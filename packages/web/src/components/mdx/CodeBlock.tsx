@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { Highlight, themes } from "prism-react-renderer";
+import { Mermaid } from "./Mermaid";
 
 export const CodeGroupContext = createContext(false);
-import { Highlight, themes } from "prism-react-renderer";
 
 function CopyIcon({ done }: { done: boolean }) {
   if (done) return <span className="text-[#50e3c2]">✓</span>;
@@ -46,6 +47,11 @@ function extractCodeProps(children: React.ReactNode): {
 
 export function CodeBlock({ children }: { children?: React.ReactNode }) {
   const { code, language } = extractCodeProps(children);
+
+  if (language === 'mermaid') {
+    return <Mermaid>{code}</Mermaid>;
+  }
+
   const inGroup = useContext(CodeGroupContext);
   const [copied, setCopied] = useState(false);
   const [isDark, setIsDark] = useState(() =>

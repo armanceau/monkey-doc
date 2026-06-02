@@ -145,3 +145,54 @@ Collapsible sections, great for FAQs or optional details.
   This one starts expanded.
 </Accordion>
 ```
+
+## Badge
+
+Inline labels for status, versioning, or categorization.
+
+<div className="flex flex-wrap gap-2 my-4">
+  <Badge>Default</Badge>
+  <Badge variant="info">Info</Badge>
+  <Badge variant="success">Success</Badge>
+  <Badge variant="warning">Warning</Badge>
+  <Badge variant="error">Error</Badge>
+  <Badge variant="new">New</Badge>
+  <Badge variant="beta">Beta</Badge>
+  <Badge variant="deprecated">Deprecated</Badge>
+</div>
+
+Use badges inline in prose too — for example, this feature is <Badge variant="new">New</Badge> in v2.
+
+```mdx
+<Badge variant="new">New</Badge>
+<Badge variant="beta">Beta</Badge>
+<Badge variant="deprecated">Deprecated</Badge>
+```
+
+Available variants: `default` · `info` · `success` · `warning` · `error` · `new` · `beta` · `deprecated`
+
+## Mermaid
+
+Render diagrams from [Mermaid](https://mermaid.js.org) syntax. Use a fenced code block with the `mermaid` language, or the `<Mermaid>` component directly.
+
+```mermaid
+flowchart LR
+  A[Write MDX] --> B[Run monkey-doc dev]
+  B --> C{Happy?}
+  C -- Yes --> D[Ship it 🚀]
+  C -- No --> A
+```
+
+```mermaid
+sequenceDiagram
+  Developer->>monkey-doc: npx monkey-doc dev
+  monkey-doc->>Browser: Serves docs at localhost:5173
+  Browser-->>Developer: Live preview with hot reload
+```
+
+~~~mdx
+```mermaid
+flowchart LR
+  A[Start] --> B[End]
+```
+~~~
