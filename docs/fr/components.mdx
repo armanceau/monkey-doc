@@ -57,3 +57,91 @@ Affichez du contenu dans des panneaux à onglets.
   <div><code>yarn add monkey-doc</code></div>
   <div><code>pnpm add monkey-doc</code></div>
 </Tabs>
+
+## FileTree
+
+Visualisez une structure de dossiers.
+
+<FileTree>
+  <Folder name="docs">
+    <File name="getting-started.mdx" highlight />
+    <Folder name="guides">
+      <File name="writing-guides.mdx" />
+      <File name="best-practices.mdx" />
+    </Folder>
+    <File name="components.mdx" />
+  </Folder>
+</FileTree>
+
+Utilisez la prop `highlight` sur un `<File>` pour attirer l'attention sur un fichier spécifique.
+
+```mdx
+<FileTree>
+  <Folder name="docs">
+    <File name="getting-started.mdx" highlight />
+    <Folder name="guides">
+      <File name="writing-guides.mdx" />
+    </Folder>
+  </Folder>
+</FileTree>
+```
+
+## CodeGroup
+
+Affichez plusieurs extraits de code dans des onglets — idéal pour les commandes de gestionnaires de paquets ou les exemples multi-langages.
+
+<CodeGroup labels={["npm", "yarn", "pnpm"]}>
+
+```bash
+npm install monkey-doc
+```
+
+```bash
+yarn add monkey-doc
+```
+
+```bash
+pnpm add monkey-doc
+```
+
+</CodeGroup>
+
+```mdx
+<CodeGroup labels={["npm", "yarn", "pnpm"]}>
+
+​```bash
+npm install monkey-doc
+​```
+
+​```bash
+yarn add monkey-doc
+​```
+
+</CodeGroup>
+```
+
+## Accordion
+
+Sections repliables, idéales pour les FAQ ou les détails optionnels.
+
+<Accordion title="Qu'est-ce que Monkey-Doc ?">
+  Monkey-Doc est un outil de documentation orienté guides produit et storytelling, en alternative à Storybook.
+</Accordion>
+
+<Accordion title="Faut-il configurer quelque chose ?">
+  Non — lancez `npx monkey-doc init` et c'est prêt. Zéro configuration requise.
+</Accordion>
+
+<Accordion title="Peut-on imbriquer des dossiers ?" defaultOpen>
+  Oui, les dossiers peuvent être imbriqués aussi profondément que nécessaire. La sidebar est générée automatiquement depuis la structure de fichiers.
+</Accordion>
+
+```mdx
+<Accordion title="Votre question ici">
+  Votre réponse ici.
+</Accordion>
+
+<Accordion title="Ouvert par défaut" defaultOpen>
+  Celui-ci commence déplié.
+</Accordion>
+```

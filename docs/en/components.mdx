@@ -57,3 +57,91 @@ Display content in tabbed panels.
   <div><code>yarn add monkey-doc</code></div>
   <div><code>pnpm add monkey-doc</code></div>
 </Tabs>
+
+## FileTree
+
+Visualize a folder structure.
+
+<FileTree>
+  <Folder name="docs">
+    <File name="getting-started.mdx" highlight />
+    <Folder name="guides">
+      <File name="writing-guides.mdx" />
+      <File name="best-practices.mdx" />
+    </Folder>
+    <File name="components.mdx" />
+  </Folder>
+</FileTree>
+
+Use the `highlight` prop on a `<File>` to draw attention to a specific file.
+
+```mdx
+<FileTree>
+  <Folder name="docs">
+    <File name="getting-started.mdx" highlight />
+    <Folder name="guides">
+      <File name="writing-guides.mdx" />
+    </Folder>
+  </Folder>
+</FileTree>
+```
+
+## CodeGroup
+
+Show multiple code snippets in tabs — ideal for package manager commands or multi-language examples.
+
+<CodeGroup labels={["npm", "yarn", "pnpm"]}>
+
+```bash
+npm install monkey-doc
+```
+
+```bash
+yarn add monkey-doc
+```
+
+```bash
+pnpm add monkey-doc
+```
+
+</CodeGroup>
+
+```mdx
+<CodeGroup labels={["npm", "yarn", "pnpm"]}>
+
+​```bash
+npm install monkey-doc
+​```
+
+​```bash
+yarn add monkey-doc
+​```
+
+</CodeGroup>
+```
+
+## Accordion
+
+Collapsible sections, great for FAQs or optional details.
+
+<Accordion title="What is Monkey-Doc?">
+  Monkey-Doc is a documentation tool focused on product guides and storytelling, as an alternative to Storybook.
+</Accordion>
+
+<Accordion title="Do I need to configure anything?">
+  No — run `npx monkey-doc init` and you're ready to go. Zero configuration required.
+</Accordion>
+
+<Accordion title="Can I nest folders?" defaultOpen>
+  Yes, folders can be nested as deeply as needed. The sidebar is generated automatically from your file structure.
+</Accordion>
+
+```mdx
+<Accordion title="Your question here">
+  Your answer here.
+</Accordion>
+
+<Accordion title="Open by default" defaultOpen>
+  This one starts expanded.
+</Accordion>
+```
