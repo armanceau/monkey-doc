@@ -36,6 +36,43 @@ function remarkExtractHeadings(headings: Heading[]) {
   };
 }
 
+function cleanText(text: string): string {
+  return text
+    .replace(/```[\s\S]*?```/g, '')
+    .replace(/`[^`]*`/g, '')
+    .replace(/<[^>]+>/g, '')
+    .replace(/!?\[([^\]]*)\]\([^)]*\)/g, '$1')
+    .replace(/[*_~]{1,3}([^*_~]+)[*_~]{1,3}/g, '$1')
+    .replace(/^\s*[-*+>|]\s*/gm, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 400);
+}
+
+interface DocSection {
+  heading: string;
+  anchor: string;
+  text: string;
+}
+
+function extractSections(raw: string): DocSection[] {
+  const withoutFm = raw.replace(/^---[\s\S]*?---\n?/, '');
+  // Split on heading lines, keeping them as delimiters
+  const parts = withoutFm.split(/^(#{1,6}\s+.+)$/m);
+  const sections: DocSection[] = [];
+  // parts[0] = pre-heading content (intro), parts[1] = first heading, parts[2] = its body, …
+  for (let i = 1; i < parts.length - 1; i += 2) {
+    const headingLine = parts[i];
+    const body = parts[i + 1] ?? '';
+    const headingMatch = headingLine.match(/^#{1,6}\s+(.+)$/);
+    if (!headingMatch) continue;
+    const heading = headingMatch[1].trim();
+    const text = cleanText(body);
+    if (text) sections.push({ heading, anchor: slugify(heading), text });
+  }
+  return sections;
+}
+
 const LOCALE_CODES = new Set(['en', 'fr', 'de', 'es', 'pt', 'ja', 'zh', 'ko', 'it', 'ru', 'nl', 'pl', 'tr', 'vi', 'ar']);
 
 function detectLanguages(docsDir: string): string[] {
@@ -153,7 +190,11 @@ export function monkeyDocPlugin(projectPath: string): Plugin {
           .join(',\n');
 
         const docsMap = files
-          .map((f) => `  ${JSON.stringify(f.slug)}: { title: ${JSON.stringify(f.title)}, path: ${JSON.stringify(f.path)}, order: ${f.order} }`)
+          .map((f) => {
+            const raw = (() => { try { return fs.readFileSync(f.filePath, 'utf-8'); } catch { return ''; } })();
+            const sections = extractSections(raw);
+            return `  ${JSON.stringify(f.slug)}: { title: ${JSON.stringify(f.title)}, path: ${JSON.stringify(f.path)}, order: ${f.order}, sections: ${JSON.stringify(sections)} }`;
+          })
           .join(',\n');
 
         return [

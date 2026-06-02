@@ -11,7 +11,7 @@ interface LayoutProps {
   children: React.ReactNode;
   onToggleDark: () => void;
   isDark: boolean;
-  docsList: Array<{ slug: string; title: string; path: string }>;
+  docsList: Array<{ slug: string; title: string; path: string; sections: Array<{ heading: string; anchor: string; text: string }> }>;
   lang: string | null;
   languages: string[];
   github?: string;

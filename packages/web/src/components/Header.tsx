@@ -17,7 +17,7 @@ interface HeaderProps {
   onToggleDark: () => void;
   isDark: boolean;
   nav: NavNode[];
-  docsList: Array<{ slug: string; title: string; path: string }>;
+  docsList: Array<{ slug: string; title: string; path: string; sections: Array<{ heading: string; anchor: string; text: string }> }>;
   lang: string | null;
   languages: string[];
   github?: string;
