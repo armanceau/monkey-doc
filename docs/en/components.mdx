@@ -197,6 +197,74 @@ flowchart LR
 ```
 ~~~
 
+## Property
+
+Document a prop, parameter, or configuration option with its type, default value, and description.
+
+<PropertyGroup title="Props">
+  <Property name="title" type="string" required>
+    The title of the page or section.
+  </Property>
+  <Property name="order" type="number" defaultValue="999">
+    Controls the position of the page in the sidebar. Lower values appear first.
+  </Property>
+  <Property name="description" type="string">
+    A short description shown in search results and meta tags.
+  </Property>
+  <Property name="theme" type='"light" | "dark" | "auto"' defaultValue='"auto"'>
+    Sets the color theme for the documentation site.
+  </Property>
+  <Property name="legacyProp" type="boolean" deprecated>
+    This prop is no longer used. Remove it from your config.
+  </Property>
+</PropertyGroup>
+
+```mdx
+<PropertyGroup title="Props">
+  <Property name="title" type="string" required>
+    The title of the page.
+  </Property>
+  <Property name="order" type="number" defaultValue="999">
+    Position in the sidebar.
+  </Property>
+  <Property name="theme" type='"light" | "dark"' defaultValue='"auto"'>
+    Color theme.
+  </Property>
+  <Property name="old" type="boolean" deprecated>
+    No longer used.
+  </Property>
+</PropertyGroup>
+```
+
+`<PropertyGroup>` is optional — use it to group related properties under a label. `<Property>` can also be used standalone.
+
+## Video
+
+Embed a video from a URL or a YouTube / Vimeo link. YouTube and Vimeo links show a poster with a play button and only load the embed on click.
+
+<Video
+  src="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+  poster="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg"
+  title="Demo video"
+  caption="A short demo of the feature in action."
+/>
+
+```mdx
+{/* Local or hosted file */}
+<Video src="/demo.mp4" caption="Feature walkthrough" />
+
+{/* YouTube — lazy-loads embed on click */}
+<Video
+  src="https://www.youtube.com/watch?v=VIDEO_ID"
+  poster="https://img.youtube.com/vi/VIDEO_ID/maxresdefault.jpg"
+  title="Demo"
+  caption="Optional caption"
+/>
+
+{/* Auto-playing muted loop (great for UI demos) */}
+<Video src="/preview.mp4" autoplay loop />
+```
+
 ## Breadcrumb
 
 An inline breadcrumb trail for content pages — useful at the top of a page to show where the reader is in the documentation.

@@ -197,6 +197,74 @@ flowchart LR
 ```
 ~~~
 
+## Property
+
+Documentez une prop, un paramètre ou une option de configuration avec son type, sa valeur par défaut et sa description.
+
+<PropertyGroup title="Props">
+  <Property name="title" type="string" required>
+    Le titre de la page ou de la section.
+  </Property>
+  <Property name="order" type="number" defaultValue="999">
+    Contrôle la position de la page dans la sidebar. Les valeurs basses apparaissent en premier.
+  </Property>
+  <Property name="description" type="string">
+    Une courte description affichée dans les résultats de recherche et les balises meta.
+  </Property>
+  <Property name="theme" type='"light" | "dark" | "auto"' defaultValue='"auto"'>
+    Définit le thème de couleur du site de documentation.
+  </Property>
+  <Property name="ancienneProp" type="boolean" deprecated>
+    Cette prop n'est plus utilisée. Retirez-la de votre config.
+  </Property>
+</PropertyGroup>
+
+```mdx
+<PropertyGroup title="Props">
+  <Property name="title" type="string" required>
+    Le titre de la page.
+  </Property>
+  <Property name="order" type="number" defaultValue="999">
+    Position dans la sidebar.
+  </Property>
+  <Property name="theme" type='"light" | "dark"' defaultValue='"auto"'>
+    Thème de couleur.
+  </Property>
+  <Property name="ancienne" type="boolean" deprecated>
+    Plus utilisée.
+  </Property>
+</PropertyGroup>
+```
+
+`<PropertyGroup>` est optionnel — utilisez-le pour regrouper des propriétés liées sous un label. `<Property>` peut aussi être utilisé seul.
+
+## Video
+
+Intégrez une vidéo depuis une URL ou un lien YouTube / Vimeo. Les liens YouTube et Vimeo affichent un poster avec un bouton play et ne chargent l'embed qu'au clic.
+
+<Video
+  src="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+  poster="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg"
+  title="Vidéo de démo"
+  caption="Une courte démo de la fonctionnalité en action."
+/>
+
+```mdx
+{/* Fichier local ou hébergé */}
+<Video src="/demo.mp4" caption="Présentation de la fonctionnalité" />
+
+{/* YouTube — charge l'embed au clic */}
+<Video
+  src="https://www.youtube.com/watch?v=VIDEO_ID"
+  poster="https://img.youtube.com/vi/VIDEO_ID/maxresdefault.jpg"
+  title="Démo"
+  caption="Légende optionnelle"
+/>
+
+{/* Lecture automatique muette en boucle (idéal pour les démos UI) */}
+<Video src="/apercu.mp4" autoplay loop />
+```
+
 ## Breadcrumb
 
 Un fil d'Ariane embarqué dans le contenu — utile en haut d'une page pour situer le lecteur dans la documentation.
