@@ -1,0 +1,45 @@
+---
+title: Écrire des guides
+order: 3
+---
+
+# Écrire des guides
+
+Monkey-Doc utilise **MDX** — du Markdown avec des composants JSX.
+
+Rédigez du Markdown classique et intégrez des composants enrichis là où vous en avez besoin.
+
+## Markdown de base
+
+Toute la syntaxe Markdown standard fonctionne nativement :
+
+- **Gras**, _italique_, `code en ligne`
+- [Liens](https://example.com)
+- Images : `![alt](url)`
+- Tableaux, citations, séparateurs horizontaux
+
+## Frontmatter
+
+Chaque page supporte le frontmatter YAML :
+
+```yaml
+---
+title: Titre de ma page
+order: 1
+---
+```
+
+- **title** — remplace le nom de fichier comme titre de la page
+- **order** — contrôle l'ordre de navigation (plus petit = en premier)
+
+## Utiliser les composants
+
+Aucun import nécessaire — tous les composants intégrés sont disponibles globalement.
+
+```mdx
+<Callout type="warning">
+  Attention à ce cas limite !
+</Callout>
+```
+
+Consultez [Composants](/components) pour la référence complète des composants.

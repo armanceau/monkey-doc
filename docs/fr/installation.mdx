@@ -1,0 +1,41 @@
+---
+title: Installation
+order: 2
+---
+
+# Installation
+
+Ajoutez Monkey-Doc à n'importe quel projet en quelques secondes.
+
+## Prérequis
+
+<Steps>
+  <Step title="Node.js 18+">
+    Assurez-vous d'avoir Node.js 18 ou supérieur installé.
+  </Step>
+  <Step title="Un répertoire de projet">
+    Naviguez jusqu'à la racine de votre projet.
+  </Step>
+</Steps>
+
+## Démarrage rapide
+
+```bash
+npx monkey-doc init
+npx monkey-doc dev
+```
+
+C'est tout ! Votre serveur de documentation démarre sur `http://localhost:5173`.
+
+## Installation manuelle
+
+```bash
+npm install -g monkey-doc
+monkey-doc init
+monkey-doc dev
+```
+
+<Callout type="success">
+  Lancez `monkey-doc init` une seule fois par projet. Cela crée un dossier `/docs` avec
+  des fichiers d'exemple et un fichier de configuration `monkey-doc.config.ts`.
+</Callout>

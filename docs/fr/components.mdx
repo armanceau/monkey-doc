@@ -1,0 +1,59 @@
+---
+title: Composants
+order: 4
+---
+
+# Composants
+
+Monkey-Doc est livré avec un ensemble de composants MDX intégrés utilisables partout.
+
+## Callout
+
+Mettez en évidence des informations importantes.
+
+<Callout type="info">Ceci est un callout **info**.</Callout>
+
+<Callout type="warning">Ceci est un callout **avertissement**.</Callout>
+
+<Callout type="success">Ceci est un callout **succès**.</Callout>
+
+```mdx
+<Callout type="info">Votre message ici.</Callout>
+```
+
+## Steps
+
+Guidez les utilisateurs à travers une séquence.
+
+<Steps>
+  <Step title="Première étape">Faites ceci en premier.</Step>
+  <Step title="Deuxième étape">Puis faites cela.</Step>
+  <Step title="Troisième étape">Enfin, faites ceci.</Step>
+</Steps>
+
+```mdx
+<Steps>
+  <Step title="Première étape">Faites ceci en premier.</Step>
+  <Step title="Deuxième étape">Puis faites cela.</Step>
+</Steps>
+```
+
+## Card
+
+Regroupez visuellement du contenu lié.
+
+<Card title="Conseil rapide" description="Les cartes sont idéales pour mettre en avant des fonctionnalités ou créer des grilles de liens." />
+
+```mdx
+<Card title="Conseil rapide" description="Votre description ici." />
+```
+
+## Tabs
+
+Affichez du contenu dans des panneaux à onglets.
+
+<Tabs labels={["npm", "yarn", "pnpm"]}>
+  <div><code>npm install monkey-doc</code></div>
+  <div><code>yarn add monkey-doc</code></div>
+  <div><code>pnpm add monkey-doc</code></div>
+</Tabs>

@@ -1,0 +1,38 @@
+---
+title: Écrire votre premier guide
+order: 4
+---
+
+# Écrire votre premier guide
+
+Cette page se trouve dans un dossier `guides/` — c'est pourquoi vous pouvez voir le **fil d'Ariane** dans l'en-tête : `Guides / Écrire votre premier guide`.
+
+## Créer un dossier
+
+Tout sous-dossier dans `docs/` devient automatiquement un segment du fil d'Ariane.
+
+```
+docs/
+  guides/
+    writing-your-first-guide.mdx   ← cette page
+  getting-started.mdx
+```
+
+## Ajouter du frontmatter
+
+Utilisez les champs `title` et `order` pour contrôler la façon dont les pages apparaissent dans la barre latérale.
+
+```mdx
+---
+title: Mon guide
+order: 1
+---
+
+# Mon guide
+
+Le contenu va ici.
+```
+
+## C'est tout
+
+Aucune configuration nécessaire. Monkey-Doc lit la structure des dossiers et construit automatiquement la navigation et le fil d'Ariane.

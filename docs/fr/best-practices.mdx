@@ -1,0 +1,47 @@
+---
+title: Bonnes pratiques
+order: 5
+---
+
+# Bonnes pratiques
+
+Conseils pour écrire une excellente documentation avec Monkey-Doc.
+
+## Structurez vos docs comme une histoire
+
+Une bonne documentation se lit naturellement. Chaque page doit répondre à une seule question clairement.
+
+<Callout type="info">
+  Considérez chaque guide comme un court article — une idée, un fil directeur, des exemples concrets.
+</Callout>
+
+## Utilisez le bon composant
+
+| Besoin | Composant |
+|--------|-----------|
+| Note importante | `<Callout>` |
+| Processus séquentiel | `<Steps>` |
+| Plusieurs options | `<Tabs>` |
+| Mise en avant d'une fonctionnalité | `<Card>` |
+| Exemple de code | bloc de code délimité |
+
+## Structure des dossiers
+
+Organisez les docs avec des dossiers pour les sections :
+
+```
+docs/
+  getting-started.mdx
+  installation.mdx
+  guides/
+    writing-docs.mdx
+    components.mdx
+  reference/
+    api.mdx
+```
+
+Les dossiers apparaissent comme des sections repliables dans la barre latérale.
+
+## Le frontmatter est important
+
+Définissez toujours `title` et `order` dans le frontmatter — ils contrôlent ce que les utilisateurs voient dans la navigation.
