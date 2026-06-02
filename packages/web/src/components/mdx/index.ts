@@ -3,8 +3,14 @@ import { Steps, Step } from './Steps';
 import { Card } from './Card';
 import { Tabs } from './Tabs';
 import { CodeBlock, InlineCode } from './CodeBlock';
+import { FileTree, FileTreeFile, FileTreeFolder } from './FileTree';
+import { CodeGroup } from './CodeGroup';
+import { Accordion } from './Accordion';
 
-export { Callout, Steps, Step, Card, Tabs, CodeBlock, InlineCode };
+export {
+  Callout, Steps, Step, Card, Tabs, CodeBlock, InlineCode,
+  FileTree, FileTreeFile, FileTreeFolder, CodeGroup, Accordion,
+};
 
 export const mdxComponents = {
   Callout,
@@ -12,6 +18,11 @@ export const mdxComponents = {
   Step,
   Card,
   Tabs,
+  FileTree,
+  File: FileTreeFile,
+  Folder: FileTreeFolder,
+  CodeGroup,
+  Accordion,
   pre: CodeBlock,
   code: InlineCode,
 };

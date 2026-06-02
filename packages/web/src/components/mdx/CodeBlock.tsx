@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
+
+export const CodeGroupContext = createContext(false);
 import { Highlight, themes } from "prism-react-renderer";
 
 function CopyIcon({ done }: { done: boolean }) {
@@ -44,6 +46,7 @@ function extractCodeProps(children: React.ReactNode): {
 
 export function CodeBlock({ children }: { children?: React.ReactNode }) {
   const { code, language } = extractCodeProps(children);
+  const inGroup = useContext(CodeGroupContext);
   const [copied, setCopied] = useState(false);
   const [isDark, setIsDark] = useState(() =>
     document.documentElement.classList.contains("dark")
@@ -64,6 +67,55 @@ export function CodeBlock({ children }: { children?: React.ReactNode }) {
     });
   }
 
+  const highlight = (
+    <Highlight
+      theme={isDark ? themes.oneDark : themes.github}
+      code={code}
+      language={language === "text" ? "plain" : language}
+    >
+      {({ className, style, tokens, getLineProps, getTokenProps }) => (
+        <pre
+          className={className}
+          style={{
+            ...style,
+            background: "transparent",
+            margin: 0,
+            borderRadius: 0,
+            padding: "1.125rem 1.25rem",
+            fontSize: "13px",
+            lineHeight: "20px",
+            fontFamily:
+              '"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace',
+            overflowX: "auto",
+          }}
+        >
+          {tokens.map((line, i) => (
+            <div key={i} {...getLineProps({ line })}>
+              {line.map((token, key) => (
+                <span key={key} {...getTokenProps({ token })} />
+              ))}
+            </div>
+          ))}
+        </pre>
+      )}
+    </Highlight>
+  );
+
+  if (inGroup) {
+    return (
+      <div className="relative bg-zinc-50 dark:bg-zinc-950">
+        <button
+          onClick={copy}
+          className="absolute right-3 top-3 flex items-center gap-1.5 font-mono text-[11px] text-zinc-500 transition-colors hover:text-zinc-700 dark:hover:text-zinc-300"
+          aria-label="Copy code"
+        >
+          <CopyIcon done={copied} />
+        </button>
+        {highlight}
+      </div>
+    );
+  }
+
   return (
     <div className="not-prose my-5 overflow-hidden rounded-lg border border-border">
       <div className="flex items-center justify-between bg-zinc-100 dark:bg-zinc-950 px-4 py-2.5 border-b border-zinc-200 dark:border-white/[0.06]">
@@ -79,39 +131,7 @@ export function CodeBlock({ children }: { children?: React.ReactNode }) {
           <span>{copied ? "Copied" : "Copy"}</span>
         </button>
       </div>
-      <div className="bg-zinc-50 dark:bg-zinc-950">
-        <Highlight
-          theme={isDark ? themes.oneDark : themes.github}
-          code={code}
-          language={language === "text" ? "plain" : language}
-        >
-          {({ className, style, tokens, getLineProps, getTokenProps }) => (
-            <pre
-              className={className}
-              style={{
-                ...style,
-                background: "transparent",
-                margin: 0,
-                borderRadius: 0,
-                padding: "1.125rem 1.25rem",
-                fontSize: "13px",
-                lineHeight: "20px",
-                fontFamily:
-                  '"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace',
-                overflowX: "auto",
-              }}
-            >
-              {tokens.map((line, i) => (
-                <div key={i} {...getLineProps({ line })}>
-                  {line.map((token, key) => (
-                    <span key={key} {...getTokenProps({ token })} />
-                  ))}
-                </div>
-              ))}
-            </pre>
-          )}
-        </Highlight>
-      </div>
+      <div className="bg-zinc-50 dark:bg-zinc-950">{highlight}</div>
     </div>
   );
 }
