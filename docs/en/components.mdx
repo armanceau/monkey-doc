@@ -196,3 +196,70 @@ flowchart LR
   A[Start] --> B[End]
 ```
 ~~~
+
+## Breadcrumb
+
+An inline breadcrumb trail for content pages — useful at the top of a page to show where the reader is in the documentation.
+
+<Breadcrumb items={["Docs", "Components", "Breadcrumb"]} />
+
+Items can include optional `href` links:
+
+<Breadcrumb items={[{ label: "Docs", href: "/" }, { label: "Components", href: "/components" }, "Breadcrumb"]} />
+
+```mdx
+<Breadcrumb items={["Docs", "Components", "Breadcrumb"]} />
+
+<Breadcrumb items={[{ label: "Docs", href: "/" }, "Components"]} />
+```
+
+## Diff
+
+Show a before/after code diff with green/red line highlighting. Uses a real LCS algorithm to highlight only the lines that actually changed.
+
+<Diff
+  before={`function greet(name) {
+  return "Hello " + name;
+}`}
+  after={`function greet(name) {
+  return \`Hello, \${name}!\`;
+}`}
+  language="js"
+/>
+
+```mdx
+<Diff
+  before={`const message = "Hello World"`}
+  after={`const message = "Hello, Universe!"`}
+  language="js"
+/>
+```
+
+The `language` prop is optional — it adds a label to the top of the block.
+
+## Stepper
+
+An interactive checklist-style stepper. Click a step to mark it complete. Checking a step also checks all previous steps; unchecking it clears all following steps.
+
+<Stepper>
+  <StepperStep title="Clone the repository">
+    Run `git clone https://github.com/your-org/your-project.git` to get a local copy.
+  </StepperStep>
+  <StepperStep title="Install dependencies">
+    Navigate into the project folder and run `npm install`.
+  </StepperStep>
+  <StepperStep title="Start the dev server">
+    Run `npm run dev` and open `http://localhost:5173` in your browser.
+  </StepperStep>
+</Stepper>
+
+```mdx
+<Stepper>
+  <StepperStep title="Clone the repository">
+    Run `git clone ...`
+  </StepperStep>
+  <StepperStep title="Install dependencies">
+    Run `npm install`.
+  </StepperStep>
+</Stepper>
+```

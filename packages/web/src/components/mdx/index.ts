@@ -8,11 +8,14 @@ import { CodeGroup } from './CodeGroup';
 import { Accordion } from './Accordion';
 import { Badge } from './Badge';
 import { Mermaid } from './Mermaid';
+import { Breadcrumb } from './Breadcrumb';
+import { Diff } from './Diff';
+import { Stepper, StepperStep } from './Stepper';
 
 export {
   Callout, Steps, Step, Card, Tabs, CodeBlock, InlineCode,
   FileTree, FileTreeFile, FileTreeFolder, CodeGroup, Accordion,
-  Badge, Mermaid,
+  Badge, Mermaid, Breadcrumb, Diff, Stepper, StepperStep,
 };
 
 export const mdxComponents = {
@@ -28,6 +31,10 @@ export const mdxComponents = {
   Accordion,
   Badge,
   Mermaid,
+  Breadcrumb,
+  Diff,
+  Stepper,
+  StepperStep,
   pre: CodeBlock,
   code: InlineCode,
 };

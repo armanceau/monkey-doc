@@ -196,3 +196,70 @@ flowchart LR
   A[Début] --> B[Fin]
 ```
 ~~~
+
+## Breadcrumb
+
+Un fil d'Ariane embarqué dans le contenu — utile en haut d'une page pour situer le lecteur dans la documentation.
+
+<Breadcrumb items={["Docs", "Composants", "Breadcrumb"]} />
+
+Les éléments peuvent inclure des liens `href` optionnels :
+
+<Breadcrumb items={[{ label: "Docs", href: "/" }, { label: "Composants", href: "/components" }, "Breadcrumb"]} />
+
+```mdx
+<Breadcrumb items={["Docs", "Composants", "Breadcrumb"]} />
+
+<Breadcrumb items={[{ label: "Docs", href: "/" }, "Composants"]} />
+```
+
+## Diff
+
+Affiche un diff avant/après avec highlighting vert/rouge. Utilise un vrai algorithme LCS pour ne mettre en évidence que les lignes réellement modifiées.
+
+<Diff
+  before={`function greet(name) {
+  return "Bonjour " + name;
+}`}
+  after={`function greet(name) {
+  return \`Bonjour, \${name} !\`;
+}`}
+  language="js"
+/>
+
+```mdx
+<Diff
+  before={`const message = "Bonjour monde"`}
+  after={`const message = "Bonjour l'univers !"`}
+  language="js"
+/>
+```
+
+La prop `language` est optionnelle — elle ajoute un label en haut du bloc.
+
+## Stepper
+
+Un stepper interactif de type checklist. Cliquez sur une étape pour la marquer comme complétée. Cocher une étape coche aussi toutes les précédentes ; la décocher efface toutes les suivantes.
+
+<Stepper>
+  <StepperStep title="Cloner le dépôt">
+    Lancez `git clone https://github.com/votre-org/votre-projet.git` pour obtenir une copie locale.
+  </StepperStep>
+  <StepperStep title="Installer les dépendances">
+    Naviguez dans le dossier du projet et lancez `npm install`.
+  </StepperStep>
+  <StepperStep title="Démarrer le serveur de développement">
+    Lancez `npm run dev` et ouvrez `http://localhost:5173` dans votre navigateur.
+  </StepperStep>
+</Stepper>
+
+```mdx
+<Stepper>
+  <StepperStep title="Cloner le dépôt">
+    Lancez `git clone ...`
+  </StepperStep>
+  <StepperStep title="Installer les dépendances">
+    Lancez `npm install`.
+  </StepperStep>
+</Stepper>
+```
