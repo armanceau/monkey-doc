@@ -43,3 +43,26 @@ Import is not required — all built-in components are globally available.
 ```
 
 See [Components](/components) for the full component reference.
+
+## Organizing with folders
+
+You can nest pages inside folders to group related content. The folder structure maps directly to the sidebar navigation.
+
+```
+docs/
+  getting-started.mdx
+  guides/
+    writing-guides.mdx
+    best-practices.mdx
+  reference/
+    components.mdx
+    configuration.mdx
+```
+
+Each folder automatically becomes a collapsible section in the sidebar. The section title is derived from the folder name (kebab-case is converted to title case).
+
+To control the order of sections and pages, use the `order` frontmatter field — it works the same for files inside folders.
+
+<Callout type="info">
+  Folders can be nested as deeply as you need. There is no limit on nesting depth.
+</Callout>

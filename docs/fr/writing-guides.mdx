@@ -43,3 +43,26 @@ Aucun import nécessaire — tous les composants intégrés sont disponibles glo
 ```
 
 Consultez [Composants](/components) pour la référence complète des composants.
+
+## Organiser avec des dossiers
+
+Vous pouvez imbriquer des pages dans des dossiers pour regrouper du contenu lié. La structure de dossiers se reflète directement dans la navigation de la sidebar.
+
+```
+docs/
+  getting-started.mdx
+  guides/
+    writing-guides.mdx
+    best-practices.mdx
+  reference/
+    components.mdx
+    configuration.mdx
+```
+
+Chaque dossier devient automatiquement une section repliable dans la sidebar. Le titre de la section est dérivé du nom du dossier (le kebab-case est converti en titre lisible).
+
+Pour contrôler l'ordre des sections et des pages, utilisez le champ `order` en frontmatter — il fonctionne de la même façon pour les fichiers à l'intérieur des dossiers.
+
+<Callout type="info">
+  Les dossiers peuvent être imbriqués aussi profondément que nécessaire. Il n'y a pas de limite de profondeur.
+</Callout>
