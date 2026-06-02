@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
-import { ChevronRight } from 'lucide-react';
+import React, { useState } from "react";
+import { NavLink, useLocation } from "react-router-dom";
+import { ChevronRight } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -11,8 +11,8 @@ import {
   SidebarMenuSub,
   SidebarMenuSubItem,
   SidebarMenuSubButton,
-} from '@/components/ui/sidebar';
-import type { NavNode } from '../types';
+} from "@/components/ui/sidebar";
+import type { NavNode } from "../types";
 
 interface AppSidebarProps {
   nav: NavNode[];
@@ -26,7 +26,9 @@ function NavItem({ node }: { node: NavNode }) {
     (!n.isFolder && n.path === location.pathname) ||
     n.children.some(isDescendantActive);
 
-  const [open, setOpen] = useState(() => node.isFolder && isDescendantActive(node));
+  const [open, setOpen] = useState(
+    () => node.isFolder && isDescendantActive(node),
+  );
 
   if (node.isFolder) {
     return (
@@ -39,7 +41,7 @@ function NavItem({ node }: { node: NavNode }) {
             {node.title}
           </span>
           <ChevronRight
-            className={`size-3.5 shrink-0 transition-transform duration-150 ${open ? 'rotate-90' : ''}`}
+            className={`size-3.5 shrink-0 transition-transform duration-150 ${open ? "rotate-90" : ""}`}
           />
         </SidebarMenuButton>
         {open && (
@@ -78,12 +80,20 @@ export function AppSidebar({ nav, title }: AppSidebarProps) {
   return (
     <Sidebar>
       <SidebarHeader className="h-16 justify-center border-b border-sidebar-border px-5 py-0">
-        <span
-          className="truncate select-none"
-          style={{ fontFamily: "'Instrument Serif', Georgia, serif", fontSize: 20, letterSpacing: '-0.01em', lineHeight: 1 }}
-        >
-          {title}
-        </span>
+        <div className="flex items-center gap-2.5 min-w-0">
+          <img src="/icon-monkey-doc.svg" alt="" className="size-6 shrink-0 " />
+          <span
+            className="truncate select-none"
+            style={{
+              fontFamily: "'Instrument Serif', Georgia, serif",
+              fontSize: 20,
+              letterSpacing: "-0.01em",
+              lineHeight: 1,
+            }}
+          >
+            {title}
+          </span>
+        </div>
       </SidebarHeader>
       <SidebarContent>
         <SidebarMenu>
