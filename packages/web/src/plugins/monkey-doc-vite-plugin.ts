@@ -76,12 +76,63 @@ export function monkeyDocPlugin(projectPath: string): Plugin {
     name: 'monkey-doc',
 
     configureServer(server: ViteDevServer) {
-      server.watcher.add(path.join(docsDir, '**'));
-      server.watcher.on('all', (_event, file) => {
-        if (!file.startsWith(docsDir)) return;
+      const configPath = path.join(projectPath, 'monkey-doc.config.ts');
+      // Watch the docs directory itself (chokidar watches it recursively)
+      server.watcher.add(docsDir);
+      if (fs.existsSync(configPath)) server.watcher.add(configPath);
+
+      const normalizedDocsDir = path.normalize(docsDir);
+
+      function invalidateManifest() {
         const mod = server.moduleGraph.getModuleById(MANIFEST_RESOLVED);
         if (mod) server.moduleGraph.invalidateModule(mod);
         server.ws.send({ type: 'full-reload' });
+      }
+
+      function invalidateDoc(file: string) {
+        const files = scanDocs(docsDir);
+        const docFile = files.find((f) => path.normalize(f.filePath) === path.normalize(file));
+        if (docFile) {
+          const mod = server.moduleGraph.getModuleById(DOC_RESOLVED_PREFIX + docFile.slug);
+          if (mod) server.moduleGraph.invalidateModule(mod);
+        }
+      }
+
+      // New .mdx file or folder → rebuild manifest
+      server.watcher.on('add', (file) => {
+        if (path.normalize(file).startsWith(normalizedDocsDir) && file.endsWith('.mdx')) {
+          invalidateManifest();
+        }
+      });
+
+      server.watcher.on('addDir', (dir) => {
+        if (path.normalize(dir).startsWith(normalizedDocsDir)) {
+          invalidateManifest();
+        }
+      });
+
+      // Deleted .mdx file or folder → rebuild manifest
+      server.watcher.on('unlink', (file) => {
+        if (path.normalize(file).startsWith(normalizedDocsDir) && file.endsWith('.mdx')) {
+          invalidateManifest();
+        }
+      });
+
+      server.watcher.on('unlinkDir', (dir) => {
+        if (path.normalize(dir).startsWith(normalizedDocsDir)) {
+          invalidateManifest();
+        }
+      });
+
+      // Content change → invalidate the specific doc + manifest (title/headings may differ)
+      server.watcher.on('change', (file) => {
+        const normalized = path.normalize(file);
+        if (normalized.startsWith(normalizedDocsDir) && file.endsWith('.mdx')) {
+          invalidateDoc(file);
+          invalidateManifest();
+        } else if (normalized === path.normalize(configPath)) {
+          invalidateManifest();
+        }
       });
     },
 
