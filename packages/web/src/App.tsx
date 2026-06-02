@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { MDXProvider } from '@mdx-js/react';
 import { Layout } from './components/Layout';
 import { DocPage } from './components/DocPage';
+import { LandingPage } from './pages/LandingPage';
 import { mdxComponents } from './components/mdx';
 import { nav, docs, docImporters, config } from 'virtual:docs-manifest';
 
@@ -68,27 +69,27 @@ export function App() {
   return (
     <MDXProvider components={mdxComponents}>
       <BrowserRouter>
-        <Layout
-          nav={filteredNav}
-          title={config.title}
-          onToggleDark={toggle}
-          isDark={isDark}
-          docsList={docsList}
-          lang={lang}
-          languages={config.languages}
-          github={config.github}
-          onSwitchLang={switchLang}
-        >
-          <Routes>
-            <Route path="/" element={<Navigate to={firstDocPath} replace />} />
-            <Route
-              path="/*"
-              element={
+        <Routes>
+          <Route path="/" element={<LandingPage firstDocPath={firstDocPath} />} />
+          <Route
+            path="/*"
+            element={
+              <Layout
+                nav={filteredNav}
+                title={config.title}
+                onToggleDark={toggle}
+                isDark={isDark}
+                docsList={docsList}
+                lang={lang}
+                languages={config.languages}
+                github={config.github}
+                onSwitchLang={switchLang}
+              >
                 <DocPage docImporters={docImporters} docsList={docsList} lang={lang} />
-              }
-            />
-          </Routes>
-        </Layout>
+              </Layout>
+            }
+          />
+        </Routes>
       </BrowserRouter>
     </MDXProvider>
   );
