@@ -23,6 +23,7 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
       'react': reactRoot,
       'react-dom': reactDomRoot,
+      'dayjs/dayjs.min.js': 'dayjs',
     },
     dedupe: ['react', 'react-dom'],
   },
@@ -33,5 +34,6 @@ export default defineConfig({
   },
   optimizeDeps: {
     exclude: ['@mdx-js/react'],
+    include: ['mermaid'],
   },
 });
