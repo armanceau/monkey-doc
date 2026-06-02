@@ -48,16 +48,19 @@ Consultez [Composants](/components) pour la référence complète des composants
 
 Vous pouvez imbriquer des pages dans des dossiers pour regrouper du contenu lié. La structure de dossiers se reflète directement dans la navigation de la sidebar.
 
-```
-docs/
-  getting-started.mdx
-  guides/
-    writing-guides.mdx
-    best-practices.mdx
-  reference/
-    components.mdx
-    configuration.mdx
-```
+<FileTree>
+  <Folder name="docs">
+    <File name="getting-started.mdx" />
+    <Folder name="guides">
+      <File name="writing-guides.mdx" />
+      <File name="best-practices.mdx" />
+    </Folder>
+    <Folder name="reference">
+      <File name="components.mdx" />
+      <File name="configuration.mdx" />
+    </Folder>
+  </Folder>
+</FileTree>
 
 Chaque dossier devient automatiquement une section repliable dans la sidebar. Le titre de la section est dérivé du nom du dossier (le kebab-case est converti en titre lisible).
 
