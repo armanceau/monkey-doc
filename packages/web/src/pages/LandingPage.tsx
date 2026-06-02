@@ -1,69 +1,39 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const INSTALL_CMD = 'npx monkey-doc init';
 
 const FEATURES = [
   {
-    num: '01',
     title: 'Narrative-first',
     body: 'Write guides and stories, not component catalogs. Focus on the journey your users take, not the API surface.',
+    icon: <BookIcon />,
   },
   {
-    num: '02',
     title: 'Zero config',
     body: 'One command. No webpack setup, no complex configuration. npx monkey-doc init scaffolds everything in seconds.',
-    code: INSTALL_CMD,
+    icon: <ZapIcon />,
   },
   {
-    num: '03',
     title: 'Ships beautiful',
-    body: 'A refined three-panel layout — sidebar navigation, prose content, live table of contents. Designed, not assembled.',
+    body: 'A three-panel layout with sidebar navigation, table of contents, breadcrumbs, dark mode, and full MDX support.',
+    icon: <SparkleIcon />,
   },
 ];
 
 const STEPS = [
-  { n: '1', cmd: 'npx monkey-doc init', title: 'Initialize', desc: 'Creates a /docs folder with example files, components, and a config file.' },
-  { n: '2', cmd: 'docs/my-guide.mdx',   title: 'Write MDX',  desc: 'Use Callouts, Steps, Cards, Tabs — all built-in, no imports needed.' },
-  { n: '3', cmd: 'npx monkey-doc dev',  title: 'Start server', desc: 'Live server at localhost:5173 with hot reload on every save.' },
+  { n: '1', cmd: 'npx monkey-doc init',  label: 'Initialize', desc: 'Creates a /docs folder with example files and config.' },
+  { n: '2', cmd: 'docs/my-guide.mdx',    label: 'Write MDX',  desc: 'Use Callouts, Steps, Cards, Tabs — all built-in, no imports needed.' },
+  { n: '3', cmd: 'npx monkey-doc dev',   label: 'Preview',    desc: 'Live server at localhost:5173 with hot reload on every save.' },
 ];
 
-const NAV_ITEMS = ['Getting Started', 'Installation', 'Writing Guides', 'Components', 'Best Practices'];
-const TOC_ITEMS = ['Introduction', 'Installation', 'Quick Start', 'Configuration'];
+const NAV_ITEMS  = ['Getting Started', 'Installation', 'Writing Guides', 'Components', 'Best Practices'];
+const TOC_ITEMS  = ['Introduction', 'Installation', 'Quick Start', 'Configuration'];
 const FAKE_LINES = [1, 0.7, 0.85, 0.6, 0.9, 0.5];
 
-function InstallCmd({ onCopy, copied }: { onCopy: () => void; copied: boolean }) {
-  return (
-    <button onClick={onCopy} className="land-install" style={{
-      display: 'inline-flex', alignItems: 'center', gap: 10,
-      padding: '11px 18px', background: '#141411',
-      border: '1px solid #252522', borderRadius: 10,
-      fontFamily: '"JetBrains Mono", monospace', fontSize: 14,
-      color: '#C4F135', cursor: 'pointer',
-    }}>
-      <span style={{ color: '#4A4840' }}>$</span>
-      {INSTALL_CMD}
-      <span style={{
-        marginLeft: 4, fontSize: 11, fontFamily: 'system-ui, sans-serif',
-        color: copied ? '#C4F135' : '#4A4840', transition: 'color 0.2s',
-      }}>
-        {copied ? 'Copied!' : 'Copy'}
-      </span>
-    </button>
-  );
-}
-
 export function LandingPage({ firstDocPath }: { firstDocPath: string }) {
-  const [copied, setCopied]     = useState(false);
+  const [copied, setCopied]       = useState(false);
   const [copiedCta, setCopiedCta] = useState(false);
-
-  useEffect(() => {
-    const link = document.createElement('link');
-    link.rel  = 'stylesheet';
-    link.href = 'https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap';
-    document.head.appendChild(link);
-    return () => { try { document.head.removeChild(link); } catch {} };
-  }, []);
 
   const copy = (set: (v: boolean) => void) => {
     navigator.clipboard.writeText(INSTALL_CMD).catch(() => {});
@@ -72,48 +42,27 @@ export function LandingPage({ firstDocPath }: { firstDocPath: string }) {
   };
 
   return (
-    <div style={{ background: '#0C0C0A', color: '#F0ECE3', minHeight: '100vh', fontFamily: 'system-ui, -apple-system, sans-serif', overflowX: 'hidden' }}>
-      <style>{`
-        @keyframes fadeUp {
-          from { opacity: 0; transform: translateY(18px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-        .land-a0 { animation: fadeUp 0.65s cubic-bezier(0.16,1,0.3,1) both; }
-        .land-a1 { animation: fadeUp 0.65s cubic-bezier(0.16,1,0.3,1) 0.08s both; }
-        .land-a2 { animation: fadeUp 0.65s cubic-bezier(0.16,1,0.3,1) 0.16s both; }
-        .land-a3 { animation: fadeUp 0.65s cubic-bezier(0.16,1,0.3,1) 0.24s both; }
-        .land-install   { transition: background 0.15s; }
-        .land-install:hover   { background: #1C1C18 !important; }
-        .land-ghost { transition: background 0.15s, color 0.15s; }
-        .land-ghost:hover { background: #1C1C18 !important; }
-        .land-feat  { transition: border-color 0.2s; }
-        .land-feat:hover { border-color: #3A3A36 !important; }
-        .land-accent-btn { transition: opacity 0.15s; }
-        .land-accent-btn:hover { opacity: 0.88; }
-        .land-subtle-link:hover { color: #9A9891 !important; }
-        .land-subtle-link { transition: color 0.15s; }
-      `}</style>
+    <div className="min-h-screen bg-background text-foreground font-sans antialiased">
 
-      {/* ── Nav ─────────────────────────────────────────────────────── */}
-      <header style={{ position: 'sticky', top: 0, zIndex: 50, borderBottom: '1px solid #1A1A18', background: 'rgba(12,12,10,0.88)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 32px', height: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <span style={{ fontFamily: "'Instrument Serif', Georgia, serif", fontSize: 20, letterSpacing: '-0.01em', color: '#F0ECE3' }}>
+      {/* ── Nav ─────────────────────────────────────────────────── */}
+      <header className="sticky top-0 z-50 h-16 border-b border-border bg-background/90 backdrop-blur">
+        <div className="mx-auto flex h-full max-w-5xl items-center justify-between px-6">
+          <span style={{ fontFamily: "'Instrument Serif', Georgia, serif", fontSize: 20, letterSpacing: '-0.01em' }}
+                className="text-foreground select-none">
             monkey-doc
           </span>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div className="flex items-center gap-2">
             <a
               href="https://github.com/armanceau/monkey-doc"
               target="_blank" rel="noopener noreferrer"
-              className="land-ghost"
-              style={{ padding: '7px 14px', fontSize: 13, borderRadius: 8, border: '1px solid #252522', color: '#6A6860', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6 }}
+              className="flex items-center gap-1.5 rounded-md border border-border px-3 py-1.5 text-[13px] text-muted-foreground transition-colors hover:text-foreground"
             >
               <GitHubIcon />
               GitHub
             </a>
             <Link
               to={firstDocPath}
-              className="land-accent-btn"
-              style={{ padding: '7px 16px', fontSize: 13, fontWeight: 500, borderRadius: 8, background: '#C4F135', color: '#1A2E04', textDecoration: 'none' }}
+              className="rounded-md bg-foreground px-3 py-1.5 text-[13px] font-medium text-background transition-opacity hover:opacity-80"
             >
               Open Docs
             </Link>
@@ -121,81 +70,61 @@ export function LandingPage({ firstDocPath }: { firstDocPath: string }) {
         </div>
       </header>
 
-      {/* ── Hero ────────────────────────────────────────────────────── */}
-      <section style={{ maxWidth: 1100, margin: '0 auto', padding: '120px 32px 96px' }}>
-        <div className="land-a0" style={{
-          display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: 44,
-          padding: '5px 14px', borderRadius: 100, border: '1px solid #252522',
-          fontSize: 11, fontFamily: '"JetBrains Mono", monospace',
-          color: '#4A4840', letterSpacing: '0.04em',
-        }}>
-          <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#C4F135', display: 'inline-block', flexShrink: 0 }} />
+      {/* ── Hero ────────────────────────────────────────────────── */}
+      <section className="mx-auto max-w-5xl px-6 pb-24 pt-24 md:pt-32">
+        <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 font-mono text-[11px] tracking-wider text-muted-foreground uppercase">
+          <span className="inline-block h-1.5 w-1.5 rounded-full bg-foreground/30" />
           v0.1 · open source
         </div>
 
-        <h1 className="land-a1" style={{
-          fontSize: 'clamp(52px, 9vw, 96px)', lineHeight: 1.0,
-          letterSpacing: '-0.045em', fontWeight: 300, margin: '0 0 32px',
-          color: '#F0ECE3',
-        }}>
-          Your product<br />has a story.{' '}
-          <em style={{ fontFamily: "'Instrument Serif', Georgia, serif", fontStyle: 'italic', fontWeight: 400, color: '#C4F135', letterSpacing: '-0.02em' }}>
-            Now tell it.
+        <h1 className="mb-6 text-[clamp(40px,7vw,68px)] font-semibold leading-[1.02] tracking-[-0.05em] text-foreground">
+          Your product has a story.{' '}
+          <em style={{ fontFamily: "'Instrument Serif', Georgia, serif" }}
+              className="font-normal not-italic text-muted-foreground">
+            Now&nbsp;tell&nbsp;it.
           </em>
         </h1>
 
-        <p className="land-a2" style={{
-          fontSize: 18, lineHeight: 1.65, color: '#7A7870',
-          maxWidth: 500, margin: '0 0 52px', fontWeight: 400,
-        }}>
-          Monkey-Doc is a zero-config documentation tool for teams who believe great products deserve great docs — not just component counts.
+        <p className="mb-10 max-w-lg text-[17px] leading-relaxed text-muted-foreground">
+          Monkey-Doc is a zero-config documentation tool for teams who believe
+          great products deserve great docs — not just component counts.
         </p>
 
-        <div className="land-a3" style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
-          <InstallCmd onCopy={() => copy(setCopied)} copied={copied} />
+        <div className="flex flex-wrap items-center gap-3">
+          <CopyInstall onCopy={() => copy(setCopied)} copied={copied} />
           <Link
             to={firstDocPath}
-            className="land-ghost"
-            style={{
-              display: 'inline-flex', alignItems: 'center', gap: 6,
-              padding: '11px 18px', background: 'transparent',
-              border: '1px solid #252522', borderRadius: 10,
-              fontSize: 14, color: '#6A6860', textDecoration: 'none',
-            }}
+            className="flex items-center gap-1.5 rounded-md border border-border px-4 py-2 text-[14px] text-muted-foreground transition-colors hover:border-foreground/30 hover:text-foreground"
           >
-            Read the docs
-            <ArrowRight />
+            Read the docs <ArrowRight />
           </Link>
         </div>
       </section>
 
       <Divider />
 
-      {/* ── Features ────────────────────────────────────────────────── */}
-      <section style={{ maxWidth: 1100, margin: '0 auto', padding: '96px 32px' }}>
+      {/* ── Features ────────────────────────────────────────────── */}
+      <section className="mx-auto max-w-5xl px-6 py-20">
         <SectionLabel>Features</SectionLabel>
-        <h2 style={{ fontSize: 'clamp(28px, 4vw, 42px)', fontWeight: 300, letterSpacing: '-0.035em', margin: '0 0 56px' }}>
+        <h2 className="mb-12 text-[clamp(24px,3.5vw,36px)] font-semibold tracking-[-0.04em] text-foreground">
           Everything you need to write{' '}
-          <em style={{ fontFamily: "'Instrument Serif', Georgia, serif", fontStyle: 'italic', color: '#C4F135' }}>great docs</em>.
+          <em style={{ fontFamily: "'Instrument Serif', Georgia, serif" }}
+              className="font-normal not-italic text-muted-foreground">
+            great docs.
+          </em>
         </h2>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1, background: '#1C1C18', borderRadius: 16, overflow: 'hidden', border: '1px solid #1C1C18' }}>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           {FEATURES.map((f) => (
-            <div key={f.num} className="land-feat" style={{ background: '#0C0C0A', padding: '36px 30px' }}>
-              <div style={{ fontFamily: '"JetBrains Mono", monospace', fontSize: 11, color: '#C4F135', letterSpacing: '0.06em', marginBottom: 20 }}>
-                {f.num}
+            <div key={f.title}
+                 className="rounded-xl border border-border bg-card p-6 shadow-card-2 transition-shadow hover:shadow-card-3">
+              <div className="mb-4 flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-background text-foreground/60">
+                {f.icon}
               </div>
-              <h3 style={{ fontSize: 17, fontWeight: 500, letterSpacing: '-0.025em', margin: '0 0 12px', color: '#F0ECE3' }}>
+              <h3 className="mb-2 text-[15px] font-semibold tracking-[-0.02em] text-foreground">
                 {f.title}
               </h3>
-              <p style={{ fontSize: 14, lineHeight: 1.65, color: '#5E5C58', margin: 0 }}>
-                {f.body}
-              </p>
-              {f.code && (
-                <div style={{ marginTop: 20, display: 'inline-flex', padding: '6px 12px', background: '#141411', borderRadius: 6, fontFamily: '"JetBrains Mono", monospace', fontSize: 12, color: '#6A6860', border: '1px solid #252522' }}>
-                  $ {f.code}
-                </div>
-              )}
+              <p className="text-[13px] leading-relaxed text-muted-foreground">{f.body}</p>
             </div>
           ))}
         </div>
@@ -203,33 +132,32 @@ export function LandingPage({ firstDocPath }: { firstDocPath: string }) {
 
       <Divider />
 
-      {/* ── How it works ────────────────────────────────────────────── */}
-      <section style={{ maxWidth: 1100, margin: '0 auto', padding: '96px 32px' }}>
+      {/* ── How it works ────────────────────────────────────────── */}
+      <section className="mx-auto max-w-5xl px-6 py-20">
         <SectionLabel>How it works</SectionLabel>
-        <h2 style={{ fontSize: 'clamp(28px, 4vw, 42px)', fontWeight: 300, letterSpacing: '-0.035em', margin: '0 0 64px' }}>
+        <h2 className="mb-12 text-[clamp(24px,3.5vw,36px)] font-semibold tracking-[-0.04em] text-foreground">
           Up and running{' '}
-          <em style={{ fontFamily: "'Instrument Serif', Georgia, serif", fontStyle: 'italic', color: '#C4F135' }}>in minutes</em>.
+          <em style={{ fontFamily: "'Instrument Serif', Georgia, serif" }}
+              className="font-normal not-italic text-muted-foreground">
+            in minutes.
+          </em>
         </h2>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 40 }}>
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           {STEPS.map((s) => (
-            <div key={s.n} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                <div style={{ width: 28, height: 28, borderRadius: '50%', border: '1px solid #2A2A26', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: '"JetBrains Mono", monospace', fontSize: 11, color: '#C4F135', flexShrink: 0 }}>
+            <div key={s.n} className="flex flex-col gap-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-border bg-background font-mono text-[11px] text-foreground/50">
                   {s.n}
                 </div>
-                <div style={{ height: 1, flex: 1, background: '#1C1C18' }} />
+                <div className="h-px flex-1 bg-border" />
               </div>
-              <div style={{ padding: '10px 14px', background: '#0E0E0B', border: '1px solid #1C1C18', borderRadius: 8, fontFamily: '"JetBrains Mono", monospace', fontSize: 13, color: '#6A6860' }}>
+              <code className="inline-block rounded-md border border-border bg-muted px-3 py-2 font-mono text-[12px] text-foreground/70">
                 {s.cmd}
-              </div>
+              </code>
               <div>
-                <h3 style={{ fontSize: 16, fontWeight: 500, letterSpacing: '-0.02em', margin: '0 0 6px', color: '#F0ECE3' }}>
-                  {s.title}
-                </h3>
-                <p style={{ fontSize: 14, lineHeight: 1.65, color: '#5E5C58', margin: 0 }}>
-                  {s.desc}
-                </p>
+                <p className="mb-1 text-[14px] font-semibold tracking-[-0.02em] text-foreground">{s.label}</p>
+                <p className="text-[13px] leading-relaxed text-muted-foreground">{s.desc}</p>
               </div>
             </div>
           ))}
@@ -238,70 +166,81 @@ export function LandingPage({ firstDocPath }: { firstDocPath: string }) {
 
       <Divider />
 
-      {/* ── UI Preview ──────────────────────────────────────────────── */}
-      <section style={{ maxWidth: 1100, margin: '0 auto', padding: '96px 32px' }}>
+      {/* ── UI Preview ──────────────────────────────────────────── */}
+      <section className="mx-auto max-w-5xl px-6 py-20">
         <SectionLabel>Preview</SectionLabel>
-        <h2 style={{ fontSize: 'clamp(28px, 4vw, 42px)', fontWeight: 300, letterSpacing: '-0.035em', margin: '0 0 48px' }}>
+        <h2 className="mb-10 text-[clamp(24px,3.5vw,36px)] font-semibold tracking-[-0.04em] text-foreground">
           A reading experience{' '}
-          <em style={{ fontFamily: "'Instrument Serif', Georgia, serif", fontStyle: 'italic', color: '#C4F135' }}>worth sharing</em>.
+          <em style={{ fontFamily: "'Instrument Serif', Georgia, serif" }}
+              className="font-normal not-italic text-muted-foreground">
+            worth sharing.
+          </em>
         </h2>
 
-        <div style={{ border: '1px solid #252522', borderRadius: 16, overflow: 'hidden', background: '#0E0E0B' }}>
-          {/* Browser chrome */}
-          <div style={{ background: '#141411', borderBottom: '1px solid #252522', padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
-            <div style={{ display: 'flex', gap: 6 }}>
+        {/* Browser mockup */}
+        <div className="overflow-hidden rounded-xl border border-border bg-background shadow-card-4">
+          {/* Chrome bar */}
+          <div className="flex items-center gap-3 border-b border-border bg-card px-4 py-3">
+            <div className="flex gap-1.5">
               {['#FF5F57', '#FFBD2E', '#28CA41'].map((c, i) => (
-                <div key={i} style={{ width: 10, height: 10, borderRadius: '50%', background: c, opacity: 0.75 }} />
+                <div key={i} style={{ background: c }} className="h-2.5 w-2.5 rounded-full opacity-70" />
               ))}
             </div>
-            <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
-              <div style={{ padding: '5px 16px', background: '#1C1C18', borderRadius: 6, fontFamily: '"JetBrains Mono", monospace', fontSize: 11, color: '#4A4840', display: 'flex', alignItems: 'center', gap: 6, width: 220, justifyContent: 'center' }}>
-                localhost:5173
-              </div>
+            <div className="mx-auto flex w-48 items-center justify-center gap-1.5 rounded-md border border-border bg-background px-3 py-1 font-mono text-[11px] text-muted-foreground">
+              localhost:5173
             </div>
           </div>
 
           {/* 3-panel */}
-          <div style={{ display: 'flex', height: 320, overflow: 'hidden' }}>
+          <div className="flex h-72 overflow-hidden">
             {/* Sidebar */}
-            <div style={{ width: 196, borderRight: '1px solid #1A1A18', padding: '20px 14px', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: 2 }}>
-              <div style={{ fontFamily: '"JetBrains Mono", monospace', fontSize: 10, color: '#3A3836', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12, paddingLeft: 10 }}>
+            <div className="flex w-44 shrink-0 flex-col gap-0.5 border-r border-border bg-card p-3 pt-4">
+              <p className="mb-2 px-2 font-mono text-[10px] uppercase tracking-widest text-muted-foreground/50">
                 My Project
-              </div>
+              </p>
               {NAV_ITEMS.map((item, i) => (
-                <div key={item} style={{ padding: '6px 10px', borderRadius: 6, fontSize: 12, color: i === 0 ? '#E8E4DC' : '#3A3836', background: i === 0 ? '#1C1C18' : 'transparent', fontWeight: i === 0 ? 500 : 400 }}>
+                <div key={item}
+                     className={`rounded-md px-2.5 py-1.5 text-[12px] ${i === 0 ? 'bg-accent text-foreground font-medium' : 'text-muted-foreground'}`}>
                   {item}
                 </div>
               ))}
             </div>
 
             {/* Content */}
-            <div style={{ flex: 1, padding: '28px 36px', overflow: 'hidden' }}>
-              <div style={{ fontSize: 19, fontWeight: 600, letterSpacing: '-0.03em', color: '#E8E4DC', marginBottom: 20 }}>
+            <div className="flex-1 overflow-hidden p-7">
+              <div className="mb-4 text-[17px] font-semibold tracking-[-0.03em] text-foreground">
                 Getting Started
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <div className="flex flex-col gap-2">
                 {FAKE_LINES.map((w, i) => (
-                  <div key={i} style={{ height: 9, background: `rgba(240,236,227,${i < 2 ? 0.12 : 0.05})`, borderRadius: 4, width: `${w * 100}%` }} />
+                  <div key={i}
+                       style={{ width: `${w * 100}%`, opacity: i < 2 ? 0.12 : 0.06 }}
+                       className="h-2.5 rounded-sm bg-foreground" />
                 ))}
-                <div style={{ marginTop: 10, padding: '12px 14px', background: '#141411', borderLeft: '3px solid #C4F135', borderRadius: '0 6px 6px 0' }}>
-                  {[0.8, 0.6].map((w, i) => (
-                    <div key={i} style={{ height: 8, background: `rgba(196,241,53,${i === 0 ? 0.25 : 0.12})`, borderRadius: 3, width: `${w * 100}%`, marginBottom: i === 0 ? 6 : 0 }} />
+                <div className="mt-2 rounded-r-md border-l-2 border-foreground/20 bg-muted p-3">
+                  {[0.8, 0.55].map((w, i) => (
+                    <div key={i}
+                         style={{ width: `${w * 100}%`, opacity: 0.12 }}
+                         className={`h-2 rounded-sm bg-foreground ${i === 0 ? 'mb-1.5' : ''}`} />
                   ))}
                 </div>
-                {[0.75, 0.55].map((w, i) => (
-                  <div key={i} style={{ height: 9, background: 'rgba(240,236,227,0.05)', borderRadius: 4, width: `${w * 100}%` }} />
+                {[0.75, 0.5].map((w, i) => (
+                  <div key={i}
+                       style={{ width: `${w * 100}%`, opacity: 0.06 }}
+                       className="h-2.5 rounded-sm bg-foreground" />
                 ))}
               </div>
             </div>
 
             {/* TOC */}
-            <div style={{ width: 156, borderLeft: '1px solid #1A1A18', padding: '20px 16px', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: 8 }}>
-              <div style={{ fontFamily: '"JetBrains Mono", monospace', fontSize: 10, color: '#3A3836', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>
+            <div className="flex w-36 shrink-0 flex-col gap-2 border-l border-border p-4 pt-4">
+              <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-muted-foreground/50">
                 On this page
-              </div>
+              </p>
               {TOC_ITEMS.map((item, i) => (
-                <div key={item} style={{ fontSize: 11, color: i === 0 ? '#C4F135' : '#3A3836', paddingLeft: i > 1 ? 10 : 0 }}>
+                <div key={item}
+                     style={{ paddingLeft: i > 1 ? 8 : 0 }}
+                     className={`text-[11px] ${i === 0 ? 'font-medium text-foreground' : 'text-muted-foreground/40'}`}>
                   {item}
                 </div>
               ))}
@@ -310,22 +249,20 @@ export function LandingPage({ firstDocPath }: { firstDocPath: string }) {
         </div>
       </section>
 
-      {/* ── CTA ─────────────────────────────────────────────────────── */}
-      <section style={{ maxWidth: 1100, margin: '0 auto', padding: '0 32px 120px' }}>
-        <div style={{ background: '#0E0E0B', border: '1px solid #252522', borderRadius: 20, padding: 'clamp(48px, 8vw, 80px) 48px', textAlign: 'center' }}>
-          <h2 style={{ fontSize: 'clamp(36px, 6vw, 64px)', fontWeight: 300, letterSpacing: '-0.04em', margin: '0 0 16px', lineHeight: 1.05 }}>
-            Ready to start{' '}
-            <em style={{ fontFamily: "'Instrument Serif', Georgia, serif", fontStyle: 'italic', color: '#C4F135' }}>writing</em>?
+      {/* ── CTA ─────────────────────────────────────────────────── */}
+      <section className="mx-auto max-w-5xl px-6 pb-24">
+        <div className="rounded-xl border border-border bg-foreground px-8 py-16 text-center text-background">
+          <h2 className="mb-3 text-[clamp(28px,4.5vw,48px)] font-semibold tracking-[-0.04em]">
+            Ready to start writing?
           </h2>
-          <p style={{ fontSize: 16, color: '#5E5C58', margin: '0 0 44px' }}>
+          <p className="mb-10 text-[15px] text-background/50">
             Free and open source. Works with any project.
           </p>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
-            <InstallCmd onCopy={() => copy(setCopiedCta)} copied={copiedCta} />
+          <div className="flex flex-col items-center gap-4">
+            <CopyInstallDark onCopy={() => copy(setCopiedCta)} copied={copiedCta} />
             <Link
               to={firstDocPath}
-              className="land-subtle-link"
-              style={{ fontSize: 13, color: '#4A4840', textDecoration: 'none', borderBottom: '1px solid #252522', paddingBottom: 2 }}
+              className="text-[13px] text-background/40 underline underline-offset-4 transition-colors hover:text-background/70"
             >
               or read the documentation →
             </Link>
@@ -333,48 +270,104 @@ export function LandingPage({ firstDocPath }: { firstDocPath: string }) {
         </div>
       </section>
 
-      {/* ── Footer ──────────────────────────────────────────────────── */}
-      <footer style={{ borderTop: '1px solid #1A1A18', maxWidth: 1100, margin: '0 auto', padding: '28px 32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <span style={{ fontFamily: "'Instrument Serif', Georgia, serif", fontSize: 16, color: '#3A3836' }}>monkey-doc</span>
-          <span style={{ fontSize: 12, color: '#2E2E2C' }}>A narrative documentation tool.</span>
-        </div>
-        <div style={{ display: 'flex', gap: 24 }}>
-          <a href="https://github.com/armanceau/monkey-doc" target="_blank" rel="noopener noreferrer"
-             className="land-subtle-link"
-             style={{ fontSize: 13, color: '#3A3836', textDecoration: 'none' }}>
-            GitHub
-          </a>
-          <Link to={firstDocPath} className="land-subtle-link"
-                style={{ fontSize: 13, color: '#3A3836', textDecoration: 'none' }}>
-            Docs
-          </Link>
+      {/* ── Footer ──────────────────────────────────────────────── */}
+      <footer className="border-t border-border">
+        <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-6 py-6 flex-wrap">
+          <div className="flex items-center gap-4">
+            <span style={{ fontFamily: "'Instrument Serif', Georgia, serif", fontSize: 17 }}
+                  className="text-muted-foreground">
+              monkey-doc
+            </span>
+            <span className="text-[12px] text-muted-foreground/40">A narrative documentation tool.</span>
+          </div>
+          <div className="flex gap-6">
+            <a href="https://github.com/armanceau/monkey-doc" target="_blank" rel="noopener noreferrer"
+               className="text-[13px] text-muted-foreground transition-colors hover:text-foreground">
+              GitHub
+            </a>
+            <Link to={firstDocPath}
+                  className="text-[13px] text-muted-foreground transition-colors hover:text-foreground">
+              Docs
+            </Link>
+          </div>
         </div>
       </footer>
     </div>
   );
 }
 
+/* ── Sub-components ─────────────────────────────────────────────── */
+
+function CopyInstall({ onCopy, copied }: { onCopy: () => void; copied: boolean }) {
+  return (
+    <button
+      onClick={onCopy}
+      className="flex items-center gap-2 rounded-md border border-border bg-card px-4 py-2 font-mono text-[13px] text-foreground/70 shadow-card-1 transition-shadow hover:shadow-card-2"
+    >
+      <span className="text-muted-foreground/40">$</span>
+      {INSTALL_CMD}
+      <span className={`ml-1 text-[11px] font-sans transition-colors ${copied ? 'text-foreground' : 'text-muted-foreground/40'}`}>
+        {copied ? 'Copied!' : 'Copy'}
+      </span>
+    </button>
+  );
+}
+
+function CopyInstallDark({ onCopy, copied }: { onCopy: () => void; copied: boolean }) {
+  return (
+    <button
+      onClick={onCopy}
+      className="flex items-center gap-2 rounded-md border border-background/10 bg-background/10 px-4 py-2.5 font-mono text-[13px] text-background/70 transition-colors hover:bg-background/15"
+    >
+      <span className="text-background/30">$</span>
+      {INSTALL_CMD}
+      <span className={`ml-1 text-[11px] font-sans transition-colors ${copied ? 'text-background' : 'text-background/30'}`}>
+        {copied ? 'Copied!' : 'Copy'}
+      </span>
+    </button>
+  );
+}
+
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ fontFamily: '"JetBrains Mono", monospace', fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#3A3836', marginBottom: 18 }}>
+    <p className="mb-3 font-mono text-[11px] uppercase tracking-widest text-muted-foreground/50">
       {children}
-    </div>
+    </p>
   );
 }
 
 function Divider() {
-  return (
-    <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 32px' }}>
-      <div style={{ height: 1, background: 'linear-gradient(90deg, transparent, #1C1C18 20%, #1C1C18 80%, transparent)' }} />
-    </div>
-  );
+  return <div className="mx-auto max-w-5xl px-6"><div className="h-px bg-border" /></div>;
 }
 
 function ArrowRight() {
   return (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
       <path d="M5 12h14M12 5l7 7-7 7" />
+    </svg>
+  );
+}
+
+function BookIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" /><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+    </svg>
+  );
+}
+
+function ZapIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+    </svg>
+  );
+}
+
+function SparkleIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5z" /><path d="M5 17l.75 2.25L8 20l-2.25.75L5 23l-.75-2.25L2 20l2.25-.75z" /><path d="M19 3l.75 2.25L22 6l-2.25.75L19 9l-.75-2.25L16 6l2.25-.75z" />
     </svg>
   );
 }
