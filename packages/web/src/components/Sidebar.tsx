@@ -78,12 +78,12 @@ export function AppSidebar({ nav, title }: AppSidebarProps) {
   return (
     <Sidebar>
       <SidebarHeader className="h-16 justify-center border-b border-sidebar-border px-5 py-0">
-        <div className="flex items-center gap-2.5">
-          <span className="text-lg leading-none select-none">🐒</span>
-          <span className="text-[14px] font-semibold tracking-[-0.025em] text-foreground truncate">
-            {title}
-          </span>
-        </div>
+        <span
+          className="truncate select-none"
+          style={{ fontFamily: "'Instrument Serif', Georgia, serif", fontSize: 20, letterSpacing: '-0.01em', lineHeight: 1 }}
+        >
+          {title}
+        </span>
       </SidebarHeader>
       <SidebarContent>
         <SidebarMenu>
