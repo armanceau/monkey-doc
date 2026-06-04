@@ -59,7 +59,7 @@ That's it! Your documentation server starts at \`http://localhost:5173\`.
 ## Manual install
 
 \`\`\`bash
-npm install -g monkey-doc
+npm install -g monkey-doc@latest
 monkey-doc init
 monkey-doc dev
 \`\`\`
@@ -68,6 +68,18 @@ monkey-doc dev
   Run \`monkey-doc init\` once per project. It creates a \`/docs\` folder with
   example files and a \`monkey-doc.config.ts\` configuration file.
 </Callout>
+
+## Deploy
+
+When your docs are ready, build a static site and deploy anywhere:
+
+\`\`\`bash
+monkey-doc build        # outputs to ./docs-dist
+vercel docs-dist        # Vercel
+\`\`\`
+
+The build also generates a \`_redirects\` file (Netlify / Cloudflare Pages) and
+\`.nojekyll\` (GitHub Pages) so the SPA routing works out of the box.
 `;
 
 export const WRITING_GUIDES = `---
