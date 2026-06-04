@@ -1,6 +1,6 @@
 {
   "name": "@monkey-doc/web",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Web UI for Monkey-Doc documentation server",
   "license": "MIT",
   "author": "Arthur Manceau",

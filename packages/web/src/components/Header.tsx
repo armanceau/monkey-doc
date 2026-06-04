@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Sun, Moon, Search } from "lucide-react";
+import { Sun, Moon, Search, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -111,6 +111,27 @@ export function Header({
             aria-label="Search"
           >
             <Search className="size-[14px]" />
+          </Button>
+
+          {/* Export PDF */}
+          <Button
+            variant="ghost"
+            size="sm"
+            className="hidden sm:flex items-center gap-1.5 h-7 px-2.5 text-[12px] text-muted-foreground hover:text-foreground"
+            onClick={() => window.open('/print', '_blank')}
+            aria-label="Export PDF"
+          >
+            <Download className="size-3.5" />
+            <span>Export PDF</span>
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="size-8 sm:hidden"
+            onClick={() => window.open('/print', '_blank')}
+            aria-label="Export PDF"
+          >
+            <Download className="size-[14px]" />
           </Button>
 
           {/* Language switcher */}

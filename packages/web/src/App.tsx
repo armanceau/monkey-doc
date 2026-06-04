@@ -4,6 +4,7 @@ import { MDXProvider } from '@mdx-js/react';
 import { Layout } from './components/Layout';
 import { DocPage } from './components/DocPage';
 import { LandingPage } from './pages/LandingPage';
+import { PrintPage } from './pages/PrintPage';
 import { mdxComponents } from './components/mdx';
 import { nav, docs, docImporters, config } from 'virtual:docs-manifest';
 
@@ -71,6 +72,7 @@ export function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<LandingPage firstDocPath={firstDocPath} />} />
+          <Route path="/print" element={<PrintPage />} />
           <Route
             path="/*"
             element={

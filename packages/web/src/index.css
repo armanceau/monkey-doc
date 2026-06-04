@@ -120,6 +120,150 @@
   }
 }
 
+/* ─── Print / PDF export ─────────────────────────────────────────────────── */
+
+.print-toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.25rem;
+  height: 52px;
+  background: #ffffff;
+  border-bottom: 1px solid #ebebeb;
+  font-family: Inter, system-ui, sans-serif;
+}
+
+.print-btn-primary {
+  height: 30px;
+  padding: 0 14px;
+  border-radius: 6px;
+  background: #171717;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.15s;
+}
+.print-btn-primary:hover { opacity: 0.85; }
+
+.print-btn-ghost {
+  height: 30px;
+  padding: 0 12px;
+  border-radius: 6px;
+  background: transparent;
+  color: #888888;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid #ebebeb;
+  transition: border-color 0.15s, color 0.15s;
+}
+.print-btn-ghost:hover { border-color: #c7c7c7; color: #171717; }
+
+.print-root {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 80px 48px 48px;
+  background: #ffffff;
+  color: #171717;
+  font-family: Inter, system-ui, sans-serif;
+  min-height: 100vh;
+}
+
+.print-cover {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: calc(100vh - 80px);
+  padding-bottom: 80px;
+  border-bottom: 1px solid #ebebeb;
+  margin-bottom: 0;
+}
+
+.print-cover-logo {
+  width: 52px;
+  height: 52px;
+  margin-bottom: 2rem;
+}
+
+.print-cover-title {
+  font-size: 2.5rem;
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  margin: 0 0 0.75rem;
+  color: #171717;
+}
+
+.print-cover-desc {
+  font-size: 1rem;
+  color: #888888;
+  margin: 0 0 2.5rem;
+  max-width: 480px;
+  line-height: 1.6;
+}
+
+.print-cover-date {
+  font-size: 0.8125rem;
+  color: #a1a1a1;
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.print-doc {
+  padding: 64px 0;
+  border-bottom: 1px solid #ebebeb;
+  break-before: page;
+  page-break-before: always;
+}
+
+.print-doc:last-child { border-bottom: none; }
+
+@media print {
+  .print-toolbar { display: none !important; }
+
+  .print-root {
+    padding: 0 40px;
+    max-width: 100%;
+  }
+
+  .print-cover {
+    min-height: 100vh;
+    page-break-after: always;
+  }
+
+  .print-doc {
+    break-before: page;
+    page-break-before: always;
+    padding: 40px 0;
+    border-bottom: none;
+  }
+
+  /* Force light colors */
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    color-adjust: exact;
+  }
+
+  body, .print-root {
+    background: #ffffff !important;
+    color: #171717 !important;
+  }
+
+  /* Prevent code blocks from overflowing */
+  pre { white-space: pre-wrap; word-break: break-all; }
+
+  /* Don't print links underlined weirdly — keep them clean */
+  a { text-decoration: none; color: inherit; }
+}
+
 @layer utilities {
   .scrollbar-thin {
     scrollbar-width: thin;
