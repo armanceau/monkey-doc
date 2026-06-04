@@ -117,13 +117,15 @@ program
     console.log('Docs:   ' + docsDir);
     console.log('Output: ' + outDir + '\n');
 
-    // Resolve vite's entry script from the web package's dependency tree so
-    // the path is correct regardless of npm hoisting or platform differences.
-    let viteScript: string;
-    try {
-      viteScript = require.resolve('vite/bin/vite.js', { paths: [webDir] });
-    } catch {
-      console.error('Could not find vite in @monkey-doc/web dependencies.');
+    // vite may be installed directly under webDir or hoisted one level up
+    // (into monkey-doc/node_modules/vite) depending on npm's hoisting.
+    const viteCandidates = [
+      path.join(webDir, 'node_modules', 'vite', 'bin', 'vite.js'),
+      path.join(webDir, '..', '..', 'vite', 'bin', 'vite.js'),
+    ];
+    const viteScript = viteCandidates.find((p) => fs.existsSync(p));
+    if (!viteScript) {
+      console.error('Could not find vite. Try reinstalling monkey-doc.');
       process.exit(1);
     }
 
