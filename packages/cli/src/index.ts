@@ -91,4 +91,59 @@ program
     });
   });
 
+program
+  .command('build')
+  .description('Build static documentation for deployment')
+  .option('-o, --output <dir>', 'Output directory', 'docs-dist')
+  .action((options: { output: string }) => {
+    const cwd = process.cwd();
+    let webDir: string;
+    try {
+      webDir = path.dirname(require.resolve('@monkey-doc/web/package.json'));
+    } catch {
+      console.error('Could not find @monkey-doc/web. Try reinstalling monkey-doc.');
+      process.exit(1);
+    }
+
+    const docsDir = path.join(cwd, 'docs');
+    if (!fs.existsSync(docsDir)) {
+      console.log('No /docs folder found. Run `monkey-doc init` first.');
+      process.exit(1);
+    }
+
+    const outDir = path.resolve(cwd, options.output);
+
+    console.log('Building Monkey-Doc...');
+    console.log('Docs:   ' + docsDir);
+    console.log('Output: ' + outDir + '\n');
+
+    const child = spawn('npm', ['run', 'build'], {
+      cwd: webDir,
+      env: {
+        ...process.env,
+        MONKEY_DOC_PATH: cwd,
+        MONKEY_DOC_OUT_DIR: outDir,
+      },
+      stdio: 'inherit',
+      shell: true,
+    });
+
+    child.on('close', (code) => {
+      if (code === 0) {
+        // SPA fallback for Netlify / Cloudflare Pages
+        fs.writeFileSync(path.join(outDir, '_redirects'), '/*  /index.html  200\n');
+        // Prevent GitHub Pages from ignoring dotfiles
+        fs.writeFileSync(path.join(outDir, '.nojekyll'), '');
+
+        console.log('\nBuild complete!');
+        console.log('');
+        console.log('Deploy:');
+        console.log('  Vercel   →  vercel ' + options.output);
+        console.log('  Netlify  →  drag the "' + options.output + '" folder to app.netlify.com/drop');
+        console.log('  GitHub   →  push "' + options.output + '" to your gh-pages branch');
+      }
+      process.exit(code ?? 0);
+    });
+  });
+
 program.parse();

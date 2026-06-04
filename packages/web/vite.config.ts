@@ -7,6 +7,7 @@ import { createRequire } from 'node:module';
 const _require = createRequire(import.meta.url);
 
 const projectPath = process.env.MONKEY_DOC_PATH ?? path.resolve(__dirname, '..', '..');
+const outDir = process.env.MONKEY_DOC_OUT_DIR;
 
 // Force Vite to always use monkey-doc's own React, not the host project's React.
 // Without this, Vite can pick up a different React version (e.g. React 17 without createRoot).
@@ -36,4 +37,5 @@ export default defineConfig({
     exclude: ['@mdx-js/react'],
     include: ['mermaid'],
   },
+  ...(outDir ? { build: { outDir, emptyOutDir: true } } : {}),
 });
