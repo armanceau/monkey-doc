@@ -10,17 +10,20 @@ Inspired by Notion, GitBook, and Vercel docs. Built with Vite, React, and MDX.
 ## Installation
 
 ```bash
-npx monkey-doc init
+npm install -g monkey-doc@latest
 ```
 
 ## Quick Start
 
 ```bash
 # 1. Initialize docs in your project
-npx monkey-doc init
+monkey-doc init
 
 # 2. Start the local documentation server
-npx monkey-doc dev
+monkey-doc dev
+
+# 3. Build for deployment
+monkey-doc build   # → ./docs-dist/
 ```
 
 Open [http://localhost:5173](http://localhost:5173) to see your docs.
