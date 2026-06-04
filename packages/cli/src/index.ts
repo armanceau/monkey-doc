@@ -117,10 +117,17 @@ program
     console.log('Docs:   ' + docsDir);
     console.log('Output: ' + outDir + '\n');
 
-    // Call vite directly to skip the tsc step, which fails in global install
-    // contexts where devDependencies (@types/*) are not available.
-    const viteBin = path.join(webDir, 'node_modules', '.bin', 'vite');
-    const child = spawn(viteBin, ['build'], {
+    // Resolve vite's entry script from the web package's dependency tree so
+    // the path is correct regardless of npm hoisting or platform differences.
+    let viteScript: string;
+    try {
+      viteScript = require.resolve('vite/bin/vite.js', { paths: [webDir] });
+    } catch {
+      console.error('Could not find vite in @monkey-doc/web dependencies.');
+      process.exit(1);
+    }
+
+    const child = spawn(process.execPath, [viteScript, 'build'], {
       cwd: webDir,
       env: {
         ...process.env,
@@ -128,7 +135,6 @@ program
         MONKEY_DOC_OUT_DIR: outDir,
       },
       stdio: 'inherit',
-      shell: true,
     });
 
     child.on('close', (code) => {
