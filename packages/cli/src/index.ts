@@ -117,7 +117,10 @@ program
     console.log('Docs:   ' + docsDir);
     console.log('Output: ' + outDir + '\n');
 
-    const child = spawn('npm', ['run', 'build'], {
+    // Call vite directly to skip the tsc step, which fails in global install
+    // contexts where devDependencies (@types/*) are not available.
+    const viteBin = path.join(webDir, 'node_modules', '.bin', 'vite');
+    const child = spawn(viteBin, ['build'], {
       cwd: webDir,
       env: {
         ...process.env,
