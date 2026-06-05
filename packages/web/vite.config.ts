@@ -9,12 +9,24 @@ const _require = createRequire(import.meta.url);
 const projectPath = process.env.MONKEY_DOC_PATH ?? path.resolve(__dirname, '..', '..');
 const outDir = process.env.MONKEY_DOC_OUT_DIR;
 
+// Read version from the monkey-doc CLI package if available, otherwise fall back to this package.
+function resolveVersion(): string {
+  try {
+    return _require('monkey-doc/package.json').version;
+  } catch {
+    return _require('./package.json').version;
+  }
+}
+
 // Force Vite to always use monkey-doc's own React, not the host project's React.
 // Without this, Vite can pick up a different React version (e.g. React 17 without createRoot).
 const reactRoot = path.dirname(_require.resolve('react/package.json'));
 const reactDomRoot = path.dirname(_require.resolve('react-dom/package.json'));
 
 export default defineConfig({
+  define: {
+    __MONKEY_DOC_VERSION__: JSON.stringify(resolveVersion()),
+  },
   plugins: [
     react(),
     monkeyDocPlugin(projectPath),

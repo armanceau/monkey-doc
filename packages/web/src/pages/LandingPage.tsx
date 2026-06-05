@@ -77,7 +77,7 @@ export function LandingPage({ firstDocPath }: { firstDocPath: string }) {
       <section className="mx-auto max-w-5xl px-6 pb-24 pt-24 md:pt-32">
         <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 font-mono text-[11px] tracking-wider text-muted-foreground uppercase">
           <span className="inline-block h-1.5 w-1.5 rounded-full bg-foreground/30" />
-          v0.1 · open source
+          v{__MONKEY_DOC_VERSION__} · open source
         </div>
 
         <h1 className="mb-6 text-[clamp(40px,7vw,68px)] font-semibold leading-[1.02] tracking-[-0.05em] text-foreground">

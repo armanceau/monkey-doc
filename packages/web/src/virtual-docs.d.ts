@@ -1,3 +1,5 @@
+declare const __MONKEY_DOC_VERSION__: string;
+
 declare module 'virtual:docs-manifest' {
   import type { NavNode } from './types';
 
