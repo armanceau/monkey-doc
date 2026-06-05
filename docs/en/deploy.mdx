@@ -1,0 +1,162 @@
+---
+title: Deploy
+order: 6
+---
+
+# Deploy
+
+Monkey-Doc builds a static site you can host anywhere — Vercel, Netlify, GitHub Pages, Cloudflare Pages, or any static file host.
+
+## Build your docs
+
+```bash
+npx monkey-doc build
+```
+
+This outputs a production-ready site to `./docs-dist`. You can change the output directory:
+
+```bash
+npx monkey-doc build --output public
+```
+
+The build automatically generates:
+- A `_redirects` file (Netlify / Cloudflare Pages SPA routing)
+- A `.nojekyll` file (GitHub Pages)
+
+<Callout type="info">
+  Run `monkey-doc build` from the root of your project — the same directory where your `monkey-doc.config.ts` lives.
+</Callout>
+
+---
+
+## Vercel
+
+The fastest option. Zero configuration required.
+
+<Steps>
+  <Step title="Install Vercel CLI">
+    ```bash
+    npm install -g vercel
+    ```
+  </Step>
+  <Step title="Build and deploy">
+    ```bash
+    npx monkey-doc build
+    vercel docs-dist --prod
+    ```
+  </Step>
+  <Step title="Done">
+    Vercel auto-detects the static output and deploys instantly. Your docs are live at a `*.vercel.app` URL.
+  </Step>
+</Steps>
+
+<Callout type="success">
+  On subsequent deploys, just run `npx monkey-doc build && vercel docs-dist --prod` again.
+</Callout>
+
+---
+
+## Netlify
+
+<Steps>
+  <Step title="Option A — Drag and drop (no CLI needed)">
+    1. Run `npx monkey-doc build`
+    2. Go to [app.netlify.com/drop](https://app.netlify.com/drop)
+    3. Drag the `docs-dist` folder into the browser window
+  </Step>
+  <Step title="Option B — Netlify CLI">
+    ```bash
+    npm install -g netlify-cli
+    npx monkey-doc build
+    netlify deploy --dir docs-dist --prod
+    ```
+  </Step>
+</Steps>
+
+The `_redirects` file in the build output handles SPA routing automatically — no extra Netlify config needed.
+
+---
+
+## GitHub Pages
+
+<Steps>
+  <Step title="Build your docs">
+    ```bash
+    npx monkey-doc build --output docs-site
+    ```
+  </Step>
+  <Step title="Push to gh-pages">
+    ```bash
+    git add docs-site
+    git commit -m "docs: build"
+    git subtree push --prefix docs-site origin gh-pages
+    ```
+  </Step>
+  <Step title="Enable GitHub Pages">
+    Go to your repo **Settings → Pages**, set the source to the `gh-pages` branch, root `/`.
+  </Step>
+</Steps>
+
+<Callout type="info">
+  The `.nojekyll` file in the build output tells GitHub Pages not to process the files with Jekyll — required for Vite-generated sites.
+</Callout>
+
+---
+
+## Cloudflare Pages
+
+<Steps>
+  <Step title="Connect your repository">
+    Go to [Cloudflare Pages](https://pages.cloudflare.com) and connect your GitHub or GitLab repository.
+  </Step>
+  <Step title="Set build configuration">
+    In the Cloudflare Pages dashboard, set:
+
+    | Setting | Value |
+    |---|---|
+    | Build command | `npx monkey-doc build` |
+    | Build output directory | `docs-dist` |
+  </Step>
+  <Step title="Deploy">
+    Cloudflare Pages builds and deploys automatically on every push to your main branch.
+  </Step>
+</Steps>
+
+---
+
+## Automate with GitHub Actions
+
+Deploy on every push using a CI workflow:
+
+```yaml
+# .github/workflows/docs.yml
+name: Deploy Docs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - 'monkey-doc.config.ts'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm ci
+
+      - run: npx monkey-doc build
+
+      - name: Deploy to Vercel
+        run: npx vercel docs-dist --prod --token ${{ secrets.VERCEL_TOKEN }}
+```
+
+<Callout type="info">
+  Replace the last step with your platform's deploy action — Netlify, GitHub Pages (`actions/deploy-pages`), or Cloudflare Pages (`cloudflare/pages-action`).
+</Callout>

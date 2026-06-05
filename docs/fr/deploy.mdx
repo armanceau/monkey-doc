@@ -1,0 +1,162 @@
+---
+title: Déployer
+order: 6
+---
+
+# Déployer
+
+Monkey-Doc génère un site statique que vous pouvez héberger n'importe où — Vercel, Netlify, GitHub Pages, Cloudflare Pages, ou tout hébergeur de fichiers statiques.
+
+## Construire la documentation
+
+```bash
+npx monkey-doc build
+```
+
+Le site de production est généré dans `./docs-dist`. Pour changer le dossier de sortie :
+
+```bash
+npx monkey-doc build --output public
+```
+
+Le build génère automatiquement :
+- Un fichier `_redirects` (routage SPA Netlify / Cloudflare Pages)
+- Un fichier `.nojekyll` (GitHub Pages)
+
+<Callout type="info">
+  Exécutez `monkey-doc build` depuis la racine de votre projet — là où se trouve votre `monkey-doc.config.ts`.
+</Callout>
+
+---
+
+## Vercel
+
+L'option la plus rapide. Zéro configuration nécessaire.
+
+<Steps>
+  <Step title="Installer le CLI Vercel">
+    ```bash
+    npm install -g vercel
+    ```
+  </Step>
+  <Step title="Builder et déployer">
+    ```bash
+    npx monkey-doc build
+    vercel docs-dist --prod
+    ```
+  </Step>
+  <Step title="Terminé">
+    Vercel détecte automatiquement le site statique et déploie instantanément. Vos docs sont en ligne sur une URL `*.vercel.app`.
+  </Step>
+</Steps>
+
+<Callout type="success">
+  Pour les déploiements suivants, relancez simplement `npx monkey-doc build && vercel docs-dist --prod`.
+</Callout>
+
+---
+
+## Netlify
+
+<Steps>
+  <Step title="Option A — Glisser-déposer (sans CLI)">
+    1. Lancez `npx monkey-doc build`
+    2. Allez sur [app.netlify.com/drop](https://app.netlify.com/drop)
+    3. Faites glisser le dossier `docs-dist` dans la fenêtre du navigateur
+  </Step>
+  <Step title="Option B — CLI Netlify">
+    ```bash
+    npm install -g netlify-cli
+    npx monkey-doc build
+    netlify deploy --dir docs-dist --prod
+    ```
+  </Step>
+</Steps>
+
+Le fichier `_redirects` dans le build gère automatiquement le routage SPA — aucune configuration Netlify supplémentaire n'est nécessaire.
+
+---
+
+## GitHub Pages
+
+<Steps>
+  <Step title="Builder la documentation">
+    ```bash
+    npx monkey-doc build --output docs-site
+    ```
+  </Step>
+  <Step title="Pousser sur la branche gh-pages">
+    ```bash
+    git add docs-site
+    git commit -m "docs: build"
+    git subtree push --prefix docs-site origin gh-pages
+    ```
+  </Step>
+  <Step title="Activer GitHub Pages">
+    Allez dans **Settings → Pages** de votre dépôt, définissez la source sur la branche `gh-pages`, racine `/`.
+  </Step>
+</Steps>
+
+<Callout type="info">
+  Le fichier `.nojekyll` indique à GitHub Pages de ne pas traiter les fichiers avec Jekyll — requis pour les sites générés par Vite.
+</Callout>
+
+---
+
+## Cloudflare Pages
+
+<Steps>
+  <Step title="Connecter votre dépôt">
+    Allez sur [Cloudflare Pages](https://pages.cloudflare.com) et connectez votre dépôt GitHub ou GitLab.
+  </Step>
+  <Step title="Configurer le build">
+    Dans le tableau de bord Cloudflare Pages, renseignez :
+
+    | Paramètre | Valeur |
+    |---|---|
+    | Commande de build | `npx monkey-doc build` |
+    | Dossier de sortie | `docs-dist` |
+  </Step>
+  <Step title="Déployer">
+    Cloudflare Pages build et déploie automatiquement à chaque push sur votre branche principale.
+  </Step>
+</Steps>
+
+---
+
+## Automatiser avec GitHub Actions
+
+Déployez à chaque push grâce à un workflow CI :
+
+```yaml
+# .github/workflows/docs.yml
+name: Deploy Docs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - 'monkey-doc.config.ts'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm ci
+
+      - run: npx monkey-doc build
+
+      - name: Déployer sur Vercel
+        run: npx vercel docs-dist --prod --token ${{ secrets.VERCEL_TOKEN }}
+```
+
+<Callout type="info">
+  Remplacez la dernière étape par l'action de déploiement de votre plateforme — Netlify, GitHub Pages (`actions/deploy-pages`), ou Cloudflare Pages (`cloudflare/pages-action`).
+</Callout>

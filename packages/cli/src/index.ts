@@ -9,6 +9,8 @@ import {
   WRITING_GUIDES,
   COMPONENTS,
   BEST_PRACTICES,
+  DEPLOY_EN,
+  DEPLOY_FR,
   CONFIG_FILE,
 } from './templates';
 
@@ -37,10 +39,14 @@ program
       'writing-guides.mdx': WRITING_GUIDES,
       'components.mdx': COMPONENTS,
       'best-practices.mdx': BEST_PRACTICES,
+      'deploy.mdx': DEPLOY_EN,
+      'en/deploy.mdx': DEPLOY_EN,
+      'fr/deploy.mdx': DEPLOY_FR,
     };
 
     for (const [name, content] of Object.entries(files)) {
       const filePath = path.join(docsDir, name);
+      fs.mkdirSync(path.dirname(filePath), { recursive: true });
       if (!fs.existsSync(filePath)) {
         fs.writeFileSync(filePath, content, 'utf-8');
         console.log(`  Created docs/${name}`);

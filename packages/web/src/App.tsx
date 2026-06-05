@@ -79,6 +79,7 @@ export function App() {
               <Layout
                 nav={filteredNav}
                 title={config.title}
+                logo={config.logo}
                 onToggleDark={toggle}
                 isDark={isDark}
                 docsList={docsList}
@@ -87,7 +88,12 @@ export function App() {
                 github={config.github}
                 onSwitchLang={switchLang}
               >
-                <DocPage docImporters={docImporters} docsList={docsList} lang={lang} />
+                <DocPage
+                  docImporters={docImporters}
+                  docsList={docsList}
+                  lang={lang}
+                  github={config.github}
+                />
               </Layout>
             }
           />

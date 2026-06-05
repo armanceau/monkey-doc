@@ -1,15 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { TableOfContents } from './TableOfContents';
 import type { DocModule } from '../types';
 
+interface DocEntry {
+  slug: string;
+  title: string;
+  path: string;
+  editPath: string;
+}
+
 interface DocPageProps {
   docImporters: Record<string, () => Promise<DocModule>>;
-  docsList: Array<{ slug: string; title: string; path: string }>;
+  docsList: DocEntry[];
   lang?: string | null;
+  github?: string;
 }
 
 function PageSkeleton() {
@@ -40,7 +48,7 @@ function NotFound({ slug }: { slug: string }) {
   );
 }
 
-export function DocPage({ docImporters, docsList, lang }: DocPageProps) {
+export function DocPage({ docImporters, docsList, lang, github }: DocPageProps) {
   const { '*': slug = '' } = useParams();
   const [mod, setMod] = useState<DocModule | null>(null);
   const [loading, setLoading] = useState(true);
@@ -49,6 +57,7 @@ export function DocPage({ docImporters, docsList, lang }: DocPageProps) {
   const currentIndex = docsList.findIndex((d) => d.slug === slug);
   const prev = currentIndex > 0 ? docsList[currentIndex - 1] : null;
   const next = currentIndex < docsList.length - 1 ? docsList[currentIndex + 1] : null;
+  const current = docsList[currentIndex];
 
   useEffect(() => {
     setLoading(true);
@@ -68,6 +77,9 @@ export function DocPage({ docImporters, docsList, lang }: DocPageProps) {
   if (notFound || !mod) return <NotFound slug={slug} />;
 
   const Component = mod.default;
+  const editUrl = github && current?.editPath
+    ? `${github}/edit/main/${current.editPath}`
+    : null;
 
   return (
     <>
@@ -77,8 +89,22 @@ export function DocPage({ docImporters, docsList, lang }: DocPageProps) {
           <Component />
         </div>
 
+        {editUrl && (
+          <div className="mt-10 pt-6 border-t border-border">
+            <a
+              href={editUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-[13px] text-muted-foreground transition-colors hover:text-foreground"
+            >
+              <Pencil className="size-3.5" />
+              Edit this page on GitHub
+            </a>
+          </div>
+        )}
+
         {(prev || next) && (
-          <nav className="mt-16 flex items-stretch justify-between gap-4 border-t border-border pt-8">
+          <nav className="mt-10 flex items-stretch justify-between gap-4 border-t border-border pt-8">
             {prev ? (
               <Button
                 variant="outline"
@@ -106,7 +132,7 @@ export function DocPage({ docImporters, docsList, lang }: DocPageProps) {
                   <span className="flex items-center gap-1 font-mono text-[11px] uppercase tracking-[0.06em] text-muted-foreground">
                     Next <ChevronRight className="h-3 w-3" />
                   </span>
-                  <span className="text-[14px] font-medium tracking-[-0.02em] text-foreground leading-snug text-right">
+                  <span className="text-[14px] font-medium tracking-[-0.02em] text-foreground text-right leading-snug">
                     {next.title}
                   </span>
                 </Link>

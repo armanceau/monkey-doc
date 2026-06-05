@@ -264,6 +264,27 @@
   a { text-decoration: none; color: inherit; }
 }
 
+/* ─── Heading anchor links ───────────────────────────────────────────────── */
+
+.prose :is(h1, h2, h3, h4, h5, h6) {
+  position: relative;
+}
+
+.prose :is(h1, h2, h3, h4, h5, h6) .heading-anchor {
+  margin-left: 0.35em;
+  opacity: 0;
+  color: hsl(var(--muted-foreground)) !important;
+  text-decoration: none !important;
+  font-weight: 400 !important;
+  font-size: 0.85em;
+  transition: opacity 0.12s;
+  user-select: none;
+}
+
+.prose :is(h1, h2, h3, h4, h5, h6):hover .heading-anchor {
+  opacity: 1;
+}
+
 @layer utilities {
   .scrollbar-thin {
     scrollbar-width: thin;

@@ -25,4 +25,7 @@ export interface MonkeyDocConfig {
   title: string;
   description?: string;
   docsDir?: string;
+  logo?: string;
+  github?: string;
+  defaultLanguage?: string;
 }

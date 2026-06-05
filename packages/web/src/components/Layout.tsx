@@ -8,6 +8,7 @@ import type { NavNode } from '../types';
 interface LayoutProps {
   nav: NavNode[];
   title: string;
+  logo?: string;
   children: React.ReactNode;
   onToggleDark: () => void;
   isDark: boolean;
@@ -19,13 +20,13 @@ interface LayoutProps {
 }
 
 export function Layout({
-  nav, title, children, onToggleDark, isDark,
+  nav, title, logo, children, onToggleDark, isDark,
   docsList, lang, languages, github, onSwitchLang,
 }: LayoutProps) {
   return (
     <SidebarProvider>
       <ReadingProgress />
-      <AppSidebar nav={nav} title={title} />
+      <AppSidebar nav={nav} title={title} logo={logo} />
       <SidebarInset>
         <Header
           onToggleDark={onToggleDark}
