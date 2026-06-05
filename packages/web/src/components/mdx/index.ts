@@ -13,12 +13,16 @@ import { Diff } from './Diff';
 import { Stepper, StepperStep } from './Stepper';
 import { Property, PropertyGroup } from './Property';
 import { Video } from './Video';
+import { LinkButton } from './LinkButton';
+import { BarChart, DonutChart, RadarChart } from './Chart';
 
 export {
   Callout, Steps, Step, Card, Tabs, CodeBlock, InlineCode,
   FileTree, FileTreeFile, FileTreeFolder, CodeGroup, Accordion,
   Badge, Mermaid, Breadcrumb, Diff, Stepper, StepperStep,
   Property, PropertyGroup, Video,
+  LinkButton,
+  BarChart, DonutChart, RadarChart,
 };
 
 export const mdxComponents = {
@@ -41,6 +45,10 @@ export const mdxComponents = {
   Property,
   PropertyGroup,
   Video,
+  LinkButton,
+  BarChart,
+  DonutChart,
+  RadarChart,
   pre: CodeBlock,
   code: InlineCode,
 };
