@@ -4,11 +4,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { spawn } from 'child_process';
 import {
-  GETTING_STARTED,
-  INSTALLATION,
-  WRITING_GUIDES,
-  COMPONENTS,
-  BEST_PRACTICES,
+  EN_GETTING_STARTED, EN_INSTALLATION, EN_WRITING_GUIDES, EN_COMPONENTS, EN_BEST_PRACTICES,
+  FR_GETTING_STARTED, FR_INSTALLATION, FR_WRITING_GUIDES, FR_COMPONENTS, FR_BEST_PRACTICES,
   DEPLOY_EN,
   DEPLOY_FR,
   CONFIG_FILE,
@@ -34,14 +31,18 @@ program
     }
 
     const files: Record<string, string> = {
-      'getting-started.mdx': GETTING_STARTED,
-      'installation.mdx': INSTALLATION,
-      'writing-guides.mdx': WRITING_GUIDES,
-      'components.mdx': COMPONENTS,
-      'best-practices.mdx': BEST_PRACTICES,
-      'deploy.mdx': DEPLOY_EN,
-      'en/deploy.mdx': DEPLOY_EN,
-      'fr/deploy.mdx': DEPLOY_FR,
+      'en/getting-started.mdx': EN_GETTING_STARTED,
+      'en/installation.mdx':    EN_INSTALLATION,
+      'en/writing-guides.mdx':  EN_WRITING_GUIDES,
+      'en/components.mdx':      EN_COMPONENTS,
+      'en/best-practices.mdx':  EN_BEST_PRACTICES,
+      'en/deploy.mdx':          DEPLOY_EN,
+      'fr/getting-started.mdx': FR_GETTING_STARTED,
+      'fr/installation.mdx':    FR_INSTALLATION,
+      'fr/writing-guides.mdx':  FR_WRITING_GUIDES,
+      'fr/components.mdx':      FR_COMPONENTS,
+      'fr/best-practices.mdx':  FR_BEST_PRACTICES,
+      'fr/deploy.mdx':          DEPLOY_FR,
     };
 
     for (const [name, content] of Object.entries(files)) {
