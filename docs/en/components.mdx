@@ -331,3 +331,97 @@ An interactive checklist-style stepper. Click a step to mark it complete. Checki
   </StepperStep>
 </Stepper>
 ```
+
+## LinkButton
+
+A styled link that looks like a button. Three variants and three sizes — works great for CTAs, download links, or navigation.
+
+<div className="flex flex-wrap gap-3 my-4">
+  <LinkButton href="/getting-started">Get started</LinkButton>
+  <LinkButton href="/getting-started" variant="outline">Read the docs</LinkButton>
+  <LinkButton href="/getting-started" variant="ghost">Learn more</LinkButton>
+</div>
+
+<div className="flex flex-wrap gap-3 my-4">
+  <LinkButton href="/getting-started" size="sm">Small</LinkButton>
+  <LinkButton href="/getting-started" size="md">Medium</LinkButton>
+  <LinkButton href="/getting-started" size="lg">Large</LinkButton>
+</div>
+
+External links automatically get a `↗` icon and open in a new tab:
+
+<LinkButton href="https://github.com/armanceau/monkey-doc">View on GitHub</LinkButton>
+
+```mdx
+<LinkButton href="/installation">Get started</LinkButton>
+<LinkButton href="/guide" variant="outline" size="sm">Read more</LinkButton>
+<LinkButton href="https://github.com" variant="ghost">GitHub ↗</LinkButton>
+```
+
+Props: `href` · `variant` (`default` / `outline` / `ghost`) · `size` (`sm` / `md` / `lg`) · `external` (auto-detected from URL)
+
+## Charts
+
+Three chart types powered by Chart.js. All adapt to dark mode automatically.
+
+### BarChart
+
+<BarChart
+  labels={["Jan", "Feb", "Mar", "Apr", "May", "Jun"]}
+  datasets={[
+    { label: "Page views", data: [4200, 5800, 4900, 7100, 6300, 8400] },
+    { label: "Unique visitors", data: [2100, 3200, 2700, 4100, 3500, 4900] }
+  ]}
+  title="Monthly traffic"
+/>
+
+```mdx
+<BarChart
+  labels={["Jan", "Feb", "Mar"]}
+  datasets={[
+    { label: "Views", data: [4200, 5800, 4900] },
+    { label: "Visitors", data: [2100, 3200, 2700] }
+  ]}
+  title="Monthly traffic"
+/>
+```
+
+Add `horizontal` for a horizontal layout. Use `height` to adjust the chart height (default `280`).
+
+### DonutChart
+
+<DonutChart
+  labels={["Vercel", "Netlify", "GitHub Pages", "Cloudflare"]}
+  data={[48, 27, 15, 10]}
+  title="Deploy platform distribution"
+/>
+
+```mdx
+<DonutChart
+  labels={["Vercel", "Netlify", "GitHub Pages"]}
+  data={[48, 27, 25]}
+  title="Deploy platforms"
+/>
+```
+
+### RadarChart
+
+<RadarChart
+  labels={["Performance", "SEO", "Accessibility", "Best Practices", "PWA"]}
+  datasets={[
+    { label: "v1.0", data: [72, 85, 78, 80, 55] },
+    { label: "v2.0", data: [95, 92, 97, 91, 78] }
+  ]}
+  title="Lighthouse scores"
+/>
+
+```mdx
+<RadarChart
+  labels={["Performance", "SEO", "Accessibility"]}
+  datasets={[
+    { label: "v1", data: [72, 85, 78] },
+    { label: "v2", data: [95, 92, 97] }
+  ]}
+  title="Scores"
+/>
+```

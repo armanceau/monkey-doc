@@ -331,3 +331,97 @@ Un stepper interactif de type checklist. Cliquez sur une étape pour la marquer 
   </StepperStep>
 </Stepper>
 ```
+
+## LinkButton
+
+Un lien stylisé en bouton. Trois variantes et trois tailles — idéal pour les CTA, liens de téléchargement ou la navigation.
+
+<div className="flex flex-wrap gap-3 my-4">
+  <LinkButton href="/fr/getting-started">Commencer</LinkButton>
+  <LinkButton href="/fr/getting-started" variant="outline">Lire la doc</LinkButton>
+  <LinkButton href="/fr/getting-started" variant="ghost">En savoir plus</LinkButton>
+</div>
+
+<div className="flex flex-wrap gap-3 my-4">
+  <LinkButton href="/fr/getting-started" size="sm">Petit</LinkButton>
+  <LinkButton href="/fr/getting-started" size="md">Moyen</LinkButton>
+  <LinkButton href="/fr/getting-started" size="lg">Grand</LinkButton>
+</div>
+
+Les liens externes reçoivent automatiquement une icône `↗` et s'ouvrent dans un nouvel onglet :
+
+<LinkButton href="https://github.com/armanceau/monkey-doc">Voir sur GitHub</LinkButton>
+
+```mdx
+<LinkButton href="/installation">Commencer</LinkButton>
+<LinkButton href="/guide" variant="outline" size="sm">Lire la suite</LinkButton>
+<LinkButton href="https://github.com" variant="ghost">GitHub ↗</LinkButton>
+```
+
+Props : `href` · `variant` (`default` / `outline` / `ghost`) · `size` (`sm` / `md` / `lg`) · `external` (détecté automatiquement depuis l'URL)
+
+## Graphiques
+
+Trois types de graphiques propulsés par Chart.js. Tous s'adaptent automatiquement au dark mode.
+
+### BarChart
+
+<BarChart
+  labels={["Jan", "Fév", "Mar", "Avr", "Mai", "Juin"]}
+  datasets={[
+    { label: "Pages vues", data: [4200, 5800, 4900, 7100, 6300, 8400] },
+    { label: "Visiteurs uniques", data: [2100, 3200, 2700, 4100, 3500, 4900] }
+  ]}
+  title="Trafic mensuel"
+/>
+
+```mdx
+<BarChart
+  labels={["Jan", "Fév", "Mar"]}
+  datasets={[
+    { label: "Vues", data: [4200, 5800, 4900] },
+    { label: "Visiteurs", data: [2100, 3200, 2700] }
+  ]}
+  title="Trafic mensuel"
+/>
+```
+
+Ajoutez `horizontal` pour un affichage horizontal. Utilisez `height` pour ajuster la hauteur (défaut `280`).
+
+### DonutChart
+
+<DonutChart
+  labels={["Vercel", "Netlify", "GitHub Pages", "Cloudflare"]}
+  data={[48, 27, 15, 10]}
+  title="Répartition des plateformes de déploiement"
+/>
+
+```mdx
+<DonutChart
+  labels={["Vercel", "Netlify", "GitHub Pages"]}
+  data={[48, 27, 25]}
+  title="Plateformes de déploiement"
+/>
+```
+
+### RadarChart
+
+<RadarChart
+  labels={["Performance", "SEO", "Accessibilité", "Bonnes pratiques", "PWA"]}
+  datasets={[
+    { label: "v1.0", data: [72, 85, 78, 80, 55] },
+    { label: "v2.0", data: [95, 92, 97, 91, 78] }
+  ]}
+  title="Scores Lighthouse"
+/>
+
+```mdx
+<RadarChart
+  labels={["Performance", "SEO", "Accessibilité"]}
+  datasets={[
+    { label: "v1", data: [72, 85, 78] },
+    { label: "v2", data: [95, 92, 97] }
+  ]}
+  title="Scores"
+/>
+```
