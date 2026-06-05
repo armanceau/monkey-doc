@@ -124,7 +124,9 @@ export function AppSidebar({ nav, title, logo }: AppSidebarProps) {
           {logo ? (
             <img src={logo} alt="" className="size-6 shrink-0 object-contain" />
           ) : (
-            <img src="/icon-monkey-doc.svg" alt="" className="size-6 shrink-0" />
+            <span className="size-6 shrink-0 flex items-center justify-center text-[18px] select-none leading-none">
+              🐒
+            </span>
           )}
           <span
             className="truncate select-none"

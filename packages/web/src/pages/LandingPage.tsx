@@ -80,7 +80,7 @@ export function LandingPage({ firstDocPath }: { firstDocPath: string }) {
       <header className="sticky top-0 z-50 h-16 border-b border-border bg-background/90 backdrop-blur">
         <div className="mx-auto flex h-full max-w-5xl items-center justify-between px-6">
           <div className="flex items-center gap-2.5 select-none">
-            <img src="/icon-monkey-doc.svg" alt="" className="size-6" />
+            <span className="text-[20px] leading-none">🐒</span>
             <span style={{ fontFamily: "'Instrument Serif', Georgia, serif", fontSize: 20, letterSpacing: '-0.01em' }}
                   className="text-foreground">
               monkey-doc
@@ -304,7 +304,7 @@ export function LandingPage({ firstDocPath }: { firstDocPath: string }) {
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-6 py-6 flex-wrap">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2 select-none">
-              <img src="/icon-monkey-doc.svg" alt="" className="size-5 opacity-50" />
+              <span className="text-[16px] leading-none opacity-50">🐒</span>
               <span style={{ fontFamily: "'Instrument Serif', Georgia, serif", fontSize: 17 }}
                     className="text-muted-foreground">
                 monkey-doc
