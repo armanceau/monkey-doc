@@ -1,0 +1,62 @@
+---
+title: Composants
+order: 3
+---
+
+# Composants MDX
+
+Monkey-Doc v3 est livré avec des composants MDX intégrés utilisables sans import.
+
+## Callout
+
+<Callout type="info">Ceci est un callout **info**.</Callout>
+<Callout type="warning">Ceci est un callout **avertissement**.</Callout>
+<Callout type="success">Ceci est un callout **succès**.</Callout>
+
+## Tabs
+
+<Tabs labels={["npm", "yarn"]}>
+
+```bash
+npm install -D monkey-doc@3
+```
+
+```bash
+yarn add -D monkey-doc@3
+```
+
+</Tabs>
+
+## Steps
+
+<Steps>
+
+### Installer monkey-doc
+
+```bash
+npm install -D monkey-doc@3
+```
+
+### Lancer init
+
+```bash
+npx monkey-doc init
+```
+
+### Commencer à écrire
+
+```bash
+npx monkey-doc dev
+```
+
+</Steps>
+
+## Card
+
+<Card title="Monkey-Doc v3" icon="🐒">
+  Un outil de documentation narratif. Pour les graphiques et Mermaid, passez à v4.
+</Card>
+
+<Callout type="info">
+  v4 ajoute les composants `BarChart`, `DonutChart`, `RadarChart` et `Mermaid`. [Voir la doc v4 →](/v4/fr/components)
+</Callout>

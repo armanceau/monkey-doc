@@ -1,0 +1,71 @@
+---
+title: Versioning
+order: 7
+---
+
+# Versioning
+
+<Callout type="success">
+  Le versioning est une fonctionnalité **v4**. Si vous utilisez v3, mettez à jour pour en bénéficier.
+</Callout>
+
+Monkey-Doc supporte plusieurs versions de documentation depuis un seul projet. Un sélecteur de version apparaît automatiquement dans la sidebar lorsque vous le configurez.
+
+## Configuration
+
+Ajoutez un tableau `versions` dans `monkey-doc.config.ts` :
+
+```ts
+import { defineConfig } from 'monkey-doc';
+
+export default defineConfig({
+  title: 'Ma Doc',
+  versions: [
+    { label: 'v4 (Dernière)', value: 'v4', path: './docs/v4', tag: 'latest' },
+    { label: 'v3',            value: 'v3', path: './docs/v3', tag: 'maintenance' },
+  ],
+  defaultVersion: 'v4',
+});
+```
+
+## Structure des fichiers
+
+Chaque version est un dossier indépendant. Les sous-dossiers de langue fonctionnent à l'intérieur de chaque version :
+
+```
+docs/
+  v4/
+    en/
+      getting-started.mdx
+      versioning.mdx
+    fr/
+      getting-started.mdx
+      versioning.mdx
+  v3/
+    en/
+      getting-started.mdx
+    fr/
+      getting-started.mdx
+```
+
+## Tags de version
+
+| Tag | Affiché comme |
+|-----|---------------|
+| `latest` | Latest |
+| `maintenance` | In maintenance mode |
+| toute chaîne | Affichée telle quelle |
+
+## Structure des URLs
+
+```
+/v4/en/getting-started
+/v4/fr/getting-started
+/v3/en/getting-started
+```
+
+Changer de version conserve la page courante si elle existe, sinon redirige vers le premier document de la version cible.
+
+## Compatibilité ascendante
+
+Les projets sans config `versions` continuent de fonctionner exactement comme avant.

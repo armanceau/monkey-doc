@@ -13,11 +13,22 @@ import {
   SidebarMenuSubButton,
 } from "@/components/ui/sidebar";
 import type { NavNode } from "../types";
+import { VersionSwitcher } from "./VersionSwitcher";
+
+interface VersionConfig {
+  label: string;
+  value: string;
+  path: string;
+  tag?: string;
+}
 
 interface AppSidebarProps {
   nav: NavNode[];
   title: string;
   logo?: string;
+  versions?: VersionConfig[];
+  currentVersion?: string;
+  versionedDocs?: Record<string, Record<string, { path: string }>>;
 }
 
 function isDescendantActive(node: NavNode, pathname: string): boolean {
@@ -116,7 +127,9 @@ function NavItem({ node }: { node: NavNode }) {
   );
 }
 
-export function AppSidebar({ nav, title, logo }: AppSidebarProps) {
+export function AppSidebar({ nav, title, logo, versions, currentVersion, versionedDocs }: AppSidebarProps) {
+  const showVersionSwitcher = versions && versions.length > 0 && currentVersion && versionedDocs;
+
   return (
     <Sidebar>
       <SidebarHeader className="h-16 justify-center border-b border-sidebar-border px-5 py-0">
@@ -141,6 +154,13 @@ export function AppSidebar({ nav, title, logo }: AppSidebarProps) {
           </span>
         </div>
       </SidebarHeader>
+      {showVersionSwitcher && (
+        <VersionSwitcher
+          versions={versions!}
+          currentVersion={currentVersion!}
+          versionedDocs={versionedDocs!}
+        />
+      )}
       <SidebarContent>
         <SidebarMenu>
           {nav.map((node) => (

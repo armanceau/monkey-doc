@@ -21,6 +21,13 @@ export interface Heading {
   id: string;
 }
 
+export interface VersionConfig {
+  label: string;
+  value: string;
+  path: string;
+  tag?: string;
+}
+
 export interface MonkeyDocConfig {
   title: string;
   description?: string;
@@ -28,4 +35,6 @@ export interface MonkeyDocConfig {
   logo?: string;
   github?: string;
   defaultLanguage?: string;
+  versions?: VersionConfig[];
+  defaultVersion?: string;
 }

@@ -1,0 +1,40 @@
+---
+title: Installation
+order: 2
+---
+
+# Installation
+
+<Callout type="warning">
+  v3 is in maintenance mode. New projects should use [v4](/v4/installation).
+</Callout>
+
+## Requirements
+
+- Node.js **16** or later
+- npm or yarn
+
+## Install
+
+```bash
+npm install -D monkey-doc@3
+```
+
+## Configuration
+
+`monkey-doc.config.ts` in v3 supports the following fields:
+
+```ts
+import { defineConfig } from 'monkey-doc';
+
+export default defineConfig({
+  title: 'My Documentation',
+  description: 'Built with Monkey-Doc',
+  github: 'https://github.com/your-org/your-repo',
+  defaultLanguage: 'en',
+});
+```
+
+<Callout type="info">
+  Versioning (`versions` field) is not available in v3. Upgrade to v4 to use it.
+</Callout>

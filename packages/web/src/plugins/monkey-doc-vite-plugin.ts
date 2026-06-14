@@ -14,6 +14,8 @@ const MANIFEST_ID = 'virtual:docs-manifest';
 const MANIFEST_RESOLVED = '\0virtual:docs-manifest';
 const DOC_PREFIX = 'virtual:doc/';
 const DOC_RESOLVED_PREFIX = '\0virtual:doc/';
+const DOC_VERSIONED_PREFIX = 'virtual:doc-versioned/';
+const DOC_VERSIONED_RESOLVED_PREFIX = '\0virtual:doc-versioned/';
 
 function slugify(text: string): string {
   return text
@@ -101,6 +103,33 @@ function extractStr(raw: string, key: string): string | undefined {
   return m[1] ?? m[2] ?? m[3];
 }
 
+interface VersionConfigRaw {
+  label: string;
+  value: string;
+  path: string;
+  tag?: string;
+}
+
+function extractVersions(raw: string): VersionConfigRaw[] {
+  const m = raw.match(/versions\s*:\s*\[([\s\S]*?)\]/);
+  if (!m) return [];
+  const arrayBody = m[1];
+  const versions: VersionConfigRaw[] = [];
+  const objRe = /\{([^}]+)\}/g;
+  let objMatch;
+  while ((objMatch = objRe.exec(arrayBody)) !== null) {
+    const block = objMatch[1];
+    const label = extractStr(block, 'label');
+    const value = extractStr(block, 'value');
+    const vPath = extractStr(block, 'path');
+    const tag = extractStr(block, 'tag');
+    if (label && value && vPath) {
+      versions.push({ label, value, path: vPath, ...(tag ? { tag } : {}) });
+    }
+  }
+  return versions;
+}
+
 interface LoadedConfig {
   title: string;
   description?: string;
@@ -108,6 +137,8 @@ interface LoadedConfig {
   defaultLanguage?: string;
   logo?: string;
   docsDir?: string;
+  versions?: VersionConfigRaw[];
+  defaultVersion?: string;
 }
 
 function loadConfig(projectPath: string): LoadedConfig {
@@ -115,6 +146,7 @@ function loadConfig(projectPath: string): LoadedConfig {
   if (!fs.existsSync(configPath)) return { title: 'Documentation' };
   try {
     const raw = fs.readFileSync(configPath, 'utf-8');
+    const versions = extractVersions(raw);
     return {
       title:           extractStr(raw, 'title')           ?? 'Documentation',
       description:     extractStr(raw, 'description'),
@@ -122,6 +154,8 @@ function loadConfig(projectPath: string): LoadedConfig {
       defaultLanguage: extractStr(raw, 'defaultLanguage'),
       logo:            extractStr(raw, 'logo'),
       docsDir:         extractStr(raw, 'docsDir'),
+      defaultVersion:  extractStr(raw, 'defaultVersion'),
+      ...(versions.length > 0 ? { versions } : {}),
     };
   } catch {
     return { title: 'Documentation' };
@@ -139,6 +173,26 @@ function detectLanguages(docsDir: string): string[] {
   } catch { return []; }
 }
 
+async function compileMdx(filePath: string): Promise<string> {
+  const raw = fs.readFileSync(filePath, 'utf-8');
+  const { data: frontmatter } = matter(raw);
+  const headings: Heading[] = [];
+  const compiled = await compile(raw, {
+    remarkPlugins: [remarkFrontmatter, remarkGfm, remarkExtractHeadings(headings)],
+    rehypePlugins: [rehypeSlug, rehypeHeadingLinks],
+    providerImportSource: '@mdx-js/react',
+  });
+  return (
+    String(compiled) +
+    `\nexport const frontmatter = ${JSON.stringify(frontmatter)};` +
+    `\nexport const headings = ${JSON.stringify(headings)};`
+  );
+}
+
+const NOT_FOUND_MODULE = `export default function NotFound() { return null; }
+export const frontmatter = {};
+export const headings = [];`;
+
 export function monkeyDocPlugin(projectPath: string): Plugin {
   // Load config at startup so we know the correct docsDir for file watching.
   const initialConfig = loadConfig(projectPath);
@@ -152,7 +206,22 @@ export function monkeyDocPlugin(projectPath: string): Plugin {
       server.watcher.add(docsDir);
       if (fs.existsSync(configPath)) server.watcher.add(configPath);
 
+      // Watch version dirs if configured
+      for (const v of initialConfig.versions ?? []) {
+        const vDir = path.resolve(projectPath, v.path);
+        if (fs.existsSync(vDir)) server.watcher.add(vDir);
+      }
+
       const normalizedDocsDir = path.normalize(docsDir);
+      const normalizedVersionDirs = (initialConfig.versions ?? []).map(v =>
+        path.normalize(path.resolve(projectPath, v.path))
+      );
+
+      function isTrackedMdx(file: string): boolean {
+        const n = path.normalize(file);
+        if (n.startsWith(normalizedDocsDir)) return true;
+        return normalizedVersionDirs.some(vd => n.startsWith(vd));
+      }
 
       function invalidateManifest() {
         const mod = server.moduleGraph.getModuleById(MANIFEST_RESOLVED);
@@ -170,32 +239,30 @@ export function monkeyDocPlugin(projectPath: string): Plugin {
       }
 
       server.watcher.on('add', (file) => {
-        if (path.normalize(file).startsWith(normalizedDocsDir) && file.endsWith('.mdx')) {
-          invalidateManifest();
-        }
+        if (isTrackedMdx(file) && file.endsWith('.mdx')) invalidateManifest();
       });
 
       server.watcher.on('addDir', (dir) => {
-        if (path.normalize(dir).startsWith(normalizedDocsDir)) {
+        const n = path.normalize(dir);
+        if (n.startsWith(normalizedDocsDir) || normalizedVersionDirs.some(vd => n.startsWith(vd))) {
           invalidateManifest();
         }
       });
 
       server.watcher.on('unlink', (file) => {
-        if (path.normalize(file).startsWith(normalizedDocsDir) && file.endsWith('.mdx')) {
-          invalidateManifest();
-        }
+        if (isTrackedMdx(file) && file.endsWith('.mdx')) invalidateManifest();
       });
 
       server.watcher.on('unlinkDir', (dir) => {
-        if (path.normalize(dir).startsWith(normalizedDocsDir)) {
+        const n = path.normalize(dir);
+        if (n.startsWith(normalizedDocsDir) || normalizedVersionDirs.some(vd => n.startsWith(vd))) {
           invalidateManifest();
         }
       });
 
       server.watcher.on('change', (file) => {
         const normalized = path.normalize(file);
-        if (normalized.startsWith(normalizedDocsDir) && file.endsWith('.mdx')) {
+        if (isTrackedMdx(file) && file.endsWith('.mdx')) {
           invalidateDoc(file);
           invalidateManifest();
         } else if (normalized === path.normalize(path.join(projectPath, 'monkey-doc.config.ts'))) {
@@ -206,16 +273,93 @@ export function monkeyDocPlugin(projectPath: string): Plugin {
 
     resolveId(id: string) {
       if (id === MANIFEST_ID) return MANIFEST_RESOLVED;
+      if (id.startsWith(DOC_VERSIONED_PREFIX)) return DOC_VERSIONED_RESOLVED_PREFIX + id.slice(DOC_VERSIONED_PREFIX.length);
       if (id.startsWith(DOC_PREFIX)) return DOC_RESOLVED_PREFIX + id.slice(DOC_PREFIX.length);
     },
 
     async load(id: string) {
+      // ── Manifest ──────────────────────────────────────────────────────────
       if (id === MANIFEST_RESOLVED) {
-        const files = scanDocs(docsDir);
-        const nav = buildNavTree(files);
-        // Re-read config on every manifest load to pick up hot config changes.
         const config = loadConfig(projectPath);
         const languages = detectLanguages(docsDir);
+        const hasVersions = (config.versions?.length ?? 0) > 0;
+
+        if (hasVersions) {
+          const defaultVer = config.defaultVersion ?? config.versions![0].value;
+          const defaultVerConfig = config.versions!.find(v => v.value === defaultVer) ?? config.versions![0];
+          // Detect languages from the default version directory
+          const languages = detectLanguages(path.resolve(projectPath, defaultVerConfig.path));
+
+          // Per-version nav / docs / importers
+          const versionedNavObj: Record<string, unknown> = {};
+          const versionedDocsObj: Record<string, unknown> = {};
+          // maps version value → { slug: virtualModuleId }
+          const versionedImportersMap: Record<string, Record<string, string>> = {};
+
+          for (const version of config.versions!) {
+            const versionDocsDir = path.resolve(projectPath, version.path);
+            const versionFiles = scanDocs(versionDocsDir);
+
+            // Build nav with version-prefixed paths so NavLinks resolve correctly
+            const filesForNav = versionFiles.map(f => ({
+              ...f,
+              path: `/${version.value}${f.path}`,
+            }));
+            versionedNavObj[version.value] = buildNavTree(filesForNav);
+
+            // Build docs map (slug within version → metadata with version-prefixed path)
+            const docsMap: Record<string, unknown> = {};
+            for (const f of versionFiles) {
+              const raw = (() => { try { return fs.readFileSync(f.filePath, 'utf-8'); } catch { return ''; } })();
+              const sections = extractSections(raw);
+              const editPath = path.relative(projectPath, f.filePath).replace(/\\/g, '/');
+              docsMap[f.slug] = {
+                title: f.title,
+                path: `/${version.value}/${f.slug}`,
+                order: f.order,
+                editPath,
+                sections,
+              };
+            }
+            versionedDocsObj[version.value] = docsMap;
+
+            // Build importers map
+            const importerMap: Record<string, string> = {};
+            for (const f of versionFiles) {
+              importerMap[f.slug] = `${DOC_VERSIONED_PREFIX}${version.value}/${f.slug}`;
+            }
+            versionedImportersMap[version.value] = importerMap;
+          }
+
+          // Serialize versionedDocImporters as executable JS (not JSON — contains arrow functions)
+          const versionedImportersCode = '{\n' + Object.entries(versionedImportersMap)
+            .map(([versionValue, slugMap]) => {
+              const importers = Object.entries(slugMap)
+                .map(([slug, moduleId]) =>
+                  `    ${JSON.stringify(slug)}: () => import(${JSON.stringify(moduleId)})`
+                )
+                .join(',\n');
+              return `  ${JSON.stringify(versionValue)}: {\n${importers}\n  }`;
+            })
+            .join(',\n') + '\n}';
+
+          return [
+            `export const versions = ${JSON.stringify(config.versions)};`,
+            `export const defaultVersion = ${JSON.stringify(defaultVer)};`,
+            `export const versionedNav = ${JSON.stringify(versionedNavObj)};`,
+            `export const versionedDocs = ${JSON.stringify(versionedDocsObj)};`,
+            `export const versionedDocImporters = ${versionedImportersCode};`,
+            // Compat stubs (not used in versioned mode)
+            `export const nav = [];`,
+            `export const docs = {};`,
+            `export const docImporters = {};`,
+            `export const config = ${JSON.stringify({ ...config, languages })};`,
+          ].join('\n');
+        }
+
+        // ── Non-versioned (existing behaviour) ────────────────────────────
+        const files = scanDocs(docsDir);
+        const nav = buildNavTree(files);
 
         const importers = files
           .map((f) => `  ${JSON.stringify(f.slug)}: () => import(${JSON.stringify(DOC_PREFIX + f.slug)})`)
@@ -231,6 +375,11 @@ export function monkeyDocPlugin(projectPath: string): Plugin {
           .join(',\n');
 
         return [
+          `export const versions = [];`,
+          `export const defaultVersion = undefined;`,
+          `export const versionedNav = {};`,
+          `export const versionedDocs = {};`,
+          `export const versionedDocImporters = {};`,
           `export const nav = ${JSON.stringify(nav)};`,
           `export const docs = {\n${docsMap}\n};`,
           `export const docImporters = {\n${importers}\n};`,
@@ -238,32 +387,35 @@ export function monkeyDocPlugin(projectPath: string): Plugin {
         ].join('\n');
       }
 
+      // ── Versioned doc module ───────────────────────────────────────────
+      if (id.startsWith(DOC_VERSIONED_RESOLVED_PREFIX)) {
+        const rest = id.slice(DOC_VERSIONED_RESOLVED_PREFIX.length);
+        const slashIdx = rest.indexOf('/');
+        if (slashIdx === -1) return NOT_FOUND_MODULE;
+
+        const versionValue = rest.slice(0, slashIdx);
+        const docSlug = rest.slice(slashIdx + 1);
+
+        const cfg = loadConfig(projectPath);
+        const versionConfig = cfg.versions?.find(v => v.value === versionValue);
+        if (!versionConfig) return NOT_FOUND_MODULE;
+
+        const versionDocsDir = path.resolve(projectPath, versionConfig.path);
+        const files = scanDocs(versionDocsDir);
+        const file = files.find(f => f.slug === docSlug);
+        if (!file) return NOT_FOUND_MODULE;
+
+        return compileMdx(file.filePath);
+      }
+
+      // ── Non-versioned doc module (existing behaviour) ──────────────────
       if (id.startsWith(DOC_RESOLVED_PREFIX)) {
         const slug = id.slice(DOC_RESOLVED_PREFIX.length);
         const files = scanDocs(docsDir);
         const file = files.find((f) => f.slug === slug);
-        if (!file) {
-          return `export default function NotFound() { return null; }
-export const frontmatter = {};
-export const headings = [];`;
-        }
+        if (!file) return NOT_FOUND_MODULE;
 
-        const raw = fs.readFileSync(file.filePath, 'utf-8');
-        const { data: frontmatter } = matter(raw);
-
-        const headings: Heading[] = [];
-
-        const compiled = await compile(raw, {
-          remarkPlugins: [remarkFrontmatter, remarkGfm, remarkExtractHeadings(headings)],
-          rehypePlugins: [rehypeSlug, rehypeHeadingLinks],
-          providerImportSource: '@mdx-js/react',
-        });
-
-        return (
-          String(compiled) +
-          `\nexport const frontmatter = ${JSON.stringify(frontmatter)};` +
-          `\nexport const headings = ${JSON.stringify(headings)};`
-        );
+        return compileMdx(file.filePath);
       }
     },
   };
