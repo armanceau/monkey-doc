@@ -137,9 +137,7 @@ export function AppSidebar({ nav, title, logo, versions, currentVersion, version
           {logo ? (
             <img src={logo} alt="" className="size-6 shrink-0 object-contain" />
           ) : (
-            <span className="size-6 shrink-0 flex items-center justify-center text-[18px] select-none leading-none">
-              🐒
-            </span>
+            <img src="/icon-monkey-doc.svg" alt="" className="size-6 shrink-0 object-contain" />
           )}
           <span
             className="truncate select-none"
