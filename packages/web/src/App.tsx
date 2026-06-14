@@ -185,7 +185,7 @@ export function App() {
         <Routes>
           {hasVersions ? (
             <>
-              <Route path="/" element={<Navigate to={defaultVersionFirstPath} replace />} />
+              <Route path="/" element={<LandingPage firstDocPath={defaultVersionFirstPath} />} />
               <Route path="/print" element={<PrintPage />} />
               <Route
                 path="/:version/*"
