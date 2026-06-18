@@ -4,6 +4,7 @@ import { MDXProvider } from '@mdx-js/react';
 import { Layout } from './components/Layout';
 import { DocPage } from './components/DocPage';
 import { LandingPage } from './pages/LandingPage';
+import CustomLanding from 'virtual:custom-landing';
 import { PrintPage } from './pages/PrintPage';
 import { mdxComponents } from './components/mdx';
 import {
@@ -182,10 +183,11 @@ export function App() {
   })();
 
   const landingCfg = config.landingPage;
-  const landingPageEl = (firstPath: string) =>
-    landingCfg === false
-      ? <Navigate to={firstPath} replace />
-      : <LandingPage firstDocPath={firstPath} landingConfig={typeof landingCfg === 'object' ? landingCfg : undefined} />;
+  const landingPageEl = (firstPath: string) => {
+    if (CustomLanding) return <CustomLanding firstDocPath={firstPath} />;
+    if (landingCfg === false) return <Navigate to={firstPath} replace />;
+    return <LandingPage firstDocPath={firstPath} landingConfig={typeof landingCfg === 'object' ? landingCfg : undefined} />;
+  };
 
   return (
     <MDXProvider components={mdxComponents}>

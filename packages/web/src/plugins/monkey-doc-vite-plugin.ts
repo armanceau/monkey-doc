@@ -16,6 +16,8 @@ const DOC_PREFIX = 'virtual:doc/';
 const DOC_RESOLVED_PREFIX = '\0virtual:doc/';
 const DOC_VERSIONED_PREFIX = 'virtual:doc-versioned/';
 const DOC_VERSIONED_RESOLVED_PREFIX = '\0virtual:doc-versioned/';
+const CUSTOM_LANDING_ID = 'virtual:custom-landing';
+const CUSTOM_LANDING_RESOLVED = '\0virtual:custom-landing';
 
 function slugify(text: string): string {
   return text
@@ -145,11 +147,14 @@ interface LoadedConfig {
   docsDir?: string;
   versions?: VersionConfigRaw[];
   defaultVersion?: string;
-  landingPage?: false | LandingPageRaw;
+  landingPage?: false | string | LandingPageRaw;
 }
 
-function extractLandingPage(raw: string): false | LandingPageRaw | undefined {
+function extractLandingPage(raw: string): false | string | LandingPageRaw | undefined {
   if (/landingPage\s*:\s*false/.test(raw)) return false;
+
+  const strVal = extractStr(raw, 'landingPage');
+  if (strVal !== undefined) return strVal;
 
   const m = raw.match(/landingPage\s*:\s*\{/);
   if (!m || m.index === undefined) return undefined;
@@ -316,6 +321,18 @@ export function monkeyDocPlugin(projectPath: string): Plugin {
         }
       });
 
+      function invalidateCustomLanding() {
+        const mod = server.moduleGraph.getModuleById(CUSTOM_LANDING_RESOLVED);
+        if (mod) server.moduleGraph.invalidateModule(mod);
+        server.ws.send({ type: 'full-reload' });
+      }
+
+      // Watch custom landing file if configured
+      if (typeof initialConfig.landingPage === 'string') {
+        const customLandingPath = path.resolve(projectPath, initialConfig.landingPage);
+        if (fs.existsSync(customLandingPath)) server.watcher.add(customLandingPath);
+      }
+
       server.watcher.on('change', (file) => {
         const normalized = path.normalize(file);
         if (isTrackedMdx(file) && file.endsWith('.mdx')) {
@@ -323,17 +340,40 @@ export function monkeyDocPlugin(projectPath: string): Plugin {
           invalidateManifest();
         } else if (normalized === path.normalize(path.join(projectPath, 'monkey-doc.config.ts'))) {
           invalidateManifest();
+        } else if (
+          typeof initialConfig.landingPage === 'string' &&
+          normalized === path.normalize(path.resolve(projectPath, initialConfig.landingPage))
+        ) {
+          invalidateCustomLanding();
         }
       });
     },
 
     resolveId(id: string) {
       if (id === MANIFEST_ID) return MANIFEST_RESOLVED;
+      if (id === CUSTOM_LANDING_ID) return CUSTOM_LANDING_RESOLVED;
       if (id.startsWith(DOC_VERSIONED_PREFIX)) return DOC_VERSIONED_RESOLVED_PREFIX + id.slice(DOC_VERSIONED_PREFIX.length);
       if (id.startsWith(DOC_PREFIX)) return DOC_RESOLVED_PREFIX + id.slice(DOC_PREFIX.length);
     },
 
     async load(id: string) {
+      // ── Custom landing page ────────────────────────────────────────────────
+      if (id === CUSTOM_LANDING_RESOLVED) {
+        const cfg = loadConfig(projectPath);
+        if (typeof cfg.landingPage !== 'string') return `export default null;`;
+
+        const filePath = path.resolve(projectPath, cfg.landingPage);
+        if (!fs.existsSync(filePath)) {
+          console.warn(`[monkey-doc] landingPage file not found: ${filePath}`);
+          return `export default null;`;
+        }
+
+        if (filePath.endsWith('.mdx')) {
+          return compileMdx(filePath);
+        }
+        return `export { default } from ${JSON.stringify(filePath)};`;
+      }
+
       // ── Manifest ──────────────────────────────────────────────────────────
       if (id === MANIFEST_RESOLVED) {
         const config = loadConfig(projectPath);

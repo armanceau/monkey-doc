@@ -43,5 +43,5 @@ export interface MonkeyDocConfig {
   defaultLanguage?: string;
   versions?: VersionConfig[];
   defaultVersion?: string;
-  landingPage?: false | LandingPageConfig;
+  landingPage?: false | string | LandingPageConfig;
 }

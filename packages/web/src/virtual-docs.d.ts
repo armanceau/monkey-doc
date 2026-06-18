@@ -1,5 +1,11 @@
 declare const __MONKEY_DOC_VERSION__: string;
 
+declare module 'virtual:custom-landing' {
+  import type React from 'react';
+  const component: React.ComponentType<{ firstDocPath: string }> | null;
+  export default component;
+}
+
 declare module 'virtual:docs-manifest' {
   import type { NavNode } from './types';
 
@@ -28,7 +34,7 @@ declare module 'virtual:docs-manifest' {
     logo?: string;
     languages: string[];
     defaultLanguage?: string;
-    landingPage?: false | {
+    landingPage?: false | string | {
       title?: string;
       description?: string;
       features?: Array<{ title: string; body: string }>;
