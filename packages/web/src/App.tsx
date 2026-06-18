@@ -34,7 +34,9 @@ function useDarkMode() {
 function useLang() {
   const [lang, setLang] = useState<string | null>(() => {
     if (config.languages.length === 0) return null;
-    return localStorage.getItem('monkey-doc-lang') || config.defaultLanguage || config.languages[0];
+    const stored = localStorage.getItem('monkey-doc-lang');
+    if (stored && config.languages.includes(stored)) return stored;
+    return config.defaultLanguage || config.languages[0];
   });
 
   function switchLang(code: string) {
