@@ -179,13 +179,19 @@ export function App() {
     return sorted[0]?.path ?? `/${dv}`;
   })();
 
+  const landingCfg = config.landingPage;
+  const landingPageEl = (firstPath: string) =>
+    landingCfg === false
+      ? <Navigate to={firstPath} replace />
+      : <LandingPage firstDocPath={firstPath} landingConfig={typeof landingCfg === 'object' ? landingCfg : undefined} />;
+
   return (
     <MDXProvider components={mdxComponents}>
       <BrowserRouter>
         <Routes>
           {hasVersions ? (
             <>
-              <Route path="/" element={<LandingPage firstDocPath={defaultVersionFirstPath} />} />
+              <Route path="/" element={landingPageEl(defaultVersionFirstPath)} />
               <Route path="/print" element={<PrintPage />} />
               <Route
                 path="/:version/*"
@@ -194,7 +200,7 @@ export function App() {
             </>
           ) : (
             <>
-              <Route path="/" element={<LandingPage firstDocPath={firstDocPath} />} />
+              <Route path="/" element={landingPageEl(firstDocPath)} />
               <Route path="/print" element={<PrintPage />} />
               <Route
                 path="/*"

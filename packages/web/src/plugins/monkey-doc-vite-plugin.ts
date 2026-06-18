@@ -130,6 +130,12 @@ function extractVersions(raw: string): VersionConfigRaw[] {
   return versions;
 }
 
+interface LandingPageRaw {
+  title?: string;
+  description?: string;
+  features?: Array<{ title: string; body: string }>;
+}
+
 interface LoadedConfig {
   title: string;
   description?: string;
@@ -139,6 +145,54 @@ interface LoadedConfig {
   docsDir?: string;
   versions?: VersionConfigRaw[];
   defaultVersion?: string;
+  landingPage?: false | LandingPageRaw;
+}
+
+function extractLandingPage(raw: string): false | LandingPageRaw | undefined {
+  if (/landingPage\s*:\s*false/.test(raw)) return false;
+
+  const m = raw.match(/landingPage\s*:\s*\{/);
+  if (!m || m.index === undefined) return undefined;
+
+  const openPos = m.index + m[0].length - 1;
+  let depth = 0;
+  let closePos = -1;
+  for (let i = openPos; i < raw.length; i++) {
+    if (raw[i] === '{') depth++;
+    else if (raw[i] === '}') { depth--; if (depth === 0) { closePos = i; break; } }
+  }
+  if (closePos === -1) return undefined;
+
+  const block = raw.slice(openPos, closePos + 1);
+  const title = extractStr(block, 'title');
+  const description = extractStr(block, 'description');
+
+  let features: Array<{ title: string; body: string }> | undefined;
+  const featMatch = block.match(/features\s*:\s*\[/);
+  if (featMatch && featMatch.index !== undefined) {
+    const featOpen = block.indexOf('[', featMatch.index + featMatch[0].length - 1);
+    let fDepth = 0;
+    let featClose = -1;
+    for (let i = featOpen; i < block.length; i++) {
+      if (block[i] === '[') fDepth++;
+      else if (block[i] === ']') { fDepth--; if (fDepth === 0) { featClose = i; break; } }
+    }
+    if (featClose !== -1) {
+      const arrayBody = block.slice(featOpen + 1, featClose);
+      const objs: Array<{ title: string; body: string }> = [];
+      const objRe = /\{([^}]+)\}/g;
+      let objMatch;
+      while ((objMatch = objRe.exec(arrayBody)) !== null) {
+        const t = extractStr(objMatch[1], 'title');
+        const b = extractStr(objMatch[1], 'body');
+        if (t && b) objs.push({ title: t, body: b });
+      }
+      if (objs.length > 0) features = objs;
+    }
+  }
+
+  if (!title && !description && !features) return undefined;
+  return { ...(title ? { title } : {}), ...(description ? { description } : {}), ...(features ? { features } : {}) };
 }
 
 function loadConfig(projectPath: string): LoadedConfig {
@@ -147,6 +201,7 @@ function loadConfig(projectPath: string): LoadedConfig {
   try {
     const raw = fs.readFileSync(configPath, 'utf-8');
     const versions = extractVersions(raw);
+    const landingPage = extractLandingPage(raw);
     return {
       title:           extractStr(raw, 'title')           ?? 'Documentation',
       description:     extractStr(raw, 'description'),
@@ -156,6 +211,7 @@ function loadConfig(projectPath: string): LoadedConfig {
       docsDir:         extractStr(raw, 'docsDir'),
       defaultVersion:  extractStr(raw, 'defaultVersion'),
       ...(versions.length > 0 ? { versions } : {}),
+      ...(landingPage !== undefined ? { landingPage } : {}),
     };
   } catch {
     return { title: 'Documentation' };

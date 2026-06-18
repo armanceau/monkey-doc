@@ -62,10 +62,20 @@ const NAV_ITEMS  = ['Getting Started', 'Installation', 'Writing Guides', 'Compon
 const TOC_ITEMS  = ['Introduction', 'Installation', 'Quick Start', 'Configuration'];
 const FAKE_LINES = [1, 0.7, 0.85, 0.6, 0.9, 0.5];
 
-export function LandingPage({ firstDocPath }: { firstDocPath: string }) {
+type LandingConfig = {
+  title?: string;
+  description?: string;
+  features?: Array<{ title: string; body: string }>;
+};
+
+export function LandingPage({ firstDocPath, landingConfig }: { firstDocPath: string; landingConfig?: LandingConfig }) {
   const [copied, setCopied]       = useState(false);
   const [copiedCta, setCopiedCta] = useState(false);
   const stars = useStars();
+
+  const effectiveFeatures = landingConfig?.features
+    ? landingConfig.features.map(f => ({ title: f.title, body: f.body, icon: null as React.ReactNode }))
+    : FEATURES;
 
   const copy = (set: (v: boolean) => void) => {
     navigator.clipboard.writeText(INSTALL_CMD).catch(() => {});
@@ -106,16 +116,19 @@ export function LandingPage({ firstDocPath }: { firstDocPath: string }) {
         </div>
 
         <h1 className="mb-6 text-[clamp(40px,7vw,68px)] font-semibold leading-[1.02] tracking-[-0.05em] text-foreground">
-          Your product has a story.{' '}
-          <em style={{ fontFamily: "'Instrument Serif', Georgia, serif" }}
-              className="font-normal not-italic text-muted-foreground">
-            Now&nbsp;tell&nbsp;it.
-          </em>
+          {landingConfig?.title ?? (
+            <>
+              Your product has a story.{' '}
+              <em style={{ fontFamily: "'Instrument Serif', Georgia, serif" }}
+                  className="font-normal not-italic text-muted-foreground">
+                Now&nbsp;tell&nbsp;it.
+              </em>
+            </>
+          )}
         </h1>
 
         <p className="mb-10 max-w-lg text-[17px] leading-relaxed text-muted-foreground">
-          Monkey-Doc is a zero-config documentation tool for teams who believe
-          great products deserve great docs — not just component counts.
+          {landingConfig?.description ?? 'Monkey-Doc is a zero-config documentation tool for teams who believe great products deserve great docs — not just component counts.'}
         </p>
 
         <div className="flex flex-wrap items-center gap-3">
@@ -144,12 +157,14 @@ export function LandingPage({ firstDocPath }: { firstDocPath: string }) {
         </h2>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          {FEATURES.map((f) => (
+          {effectiveFeatures.map((f) => (
             <div key={f.title}
                  className="rounded-xl border border-border bg-card p-6 shadow-card-2 transition-shadow hover:shadow-card-3">
-              <div className="mb-4 flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-background text-foreground/60">
-                {f.icon}
-              </div>
+              {f.icon && (
+                <div className="mb-4 flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-background text-foreground/60">
+                  {f.icon}
+                </div>
+              )}
               <h3 className="mb-2 text-[15px] font-semibold tracking-[-0.02em] text-foreground">
                 {f.title}
               </h3>

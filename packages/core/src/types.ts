@@ -28,6 +28,12 @@ export interface VersionConfig {
   tag?: string;
 }
 
+export interface LandingPageConfig {
+  title?: string;
+  description?: string;
+  features?: Array<{ title: string; body: string }>;
+}
+
 export interface MonkeyDocConfig {
   title: string;
   description?: string;
@@ -37,4 +43,5 @@ export interface MonkeyDocConfig {
   defaultLanguage?: string;
   versions?: VersionConfig[];
   defaultVersion?: string;
+  landingPage?: false | LandingPageConfig;
 }

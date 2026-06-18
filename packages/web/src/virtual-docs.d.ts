@@ -28,6 +28,11 @@ declare module 'virtual:docs-manifest' {
     logo?: string;
     languages: string[];
     defaultLanguage?: string;
+    landingPage?: false | {
+      title?: string;
+      description?: string;
+      features?: Array<{ title: string; body: string }>;
+    };
   };
 
   // Versioning
