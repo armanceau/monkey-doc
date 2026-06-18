@@ -144,6 +144,8 @@ export function App() {
   const { isDark, toggle } = useDarkMode();
   const { lang, switchLang } = useLang();
 
+  useEffect(() => { document.title = config.title; }, []);
+
   // Non-versioned setup
   const orderBySlug = new Map(allDocsList.map((d) => [d.slug, d.order]));
 
