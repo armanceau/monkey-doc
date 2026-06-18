@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Search, FileText, Hash } from 'lucide-react';
 
@@ -105,8 +104,6 @@ export function SearchDialog({ docsList, open, onOpenChange }: SearchDialogProps
   const [activeIndex, setActiveIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const activeRef = useRef<HTMLButtonElement>(null);
-  const navigate = useNavigate();
-
   const results = search(docsList, query);
 
   useEffect(() => { setActiveIndex(0); }, [query]);
@@ -124,7 +121,8 @@ export function SearchDialog({ docsList, open, onOpenChange }: SearchDialogProps
 
   function goTo(path: string, anchor: string | null) {
     const target = anchor ? `${path}#${anchor}` : path;
-    navigate(target);
+    window.history.pushState(null, '', target);
+    window.dispatchEvent(new PopStateEvent('popstate', { state: null }));
     onOpenChange(false);
     // Let React Router render first, then scroll
     if (anchor) {
