@@ -148,13 +148,25 @@ program
 
     child.on('close', (code) => {
       if (code === 0) {
-        // vercel.json — SPA catch-all rewrite for Vercel
-        const userVercel = path.join(cwd, 'vercel.json');
-        if (fs.existsSync(userVercel)) {
-          fs.copyFileSync(userVercel, path.join(outDir, 'vercel.json'));
-        } else {
+        // vercel.json at project root — required for Vercel GitHub integration
+        // (Vercel reads config from the repo root, not from the output directory)
+        const rootVercel = path.join(cwd, 'vercel.json');
+        if (!fs.existsSync(rootVercel)) {
           fs.writeFileSync(
-            path.join(outDir, 'vercel.json'),
+            rootVercel,
+            JSON.stringify(
+              { outputDirectory: options.output, rewrites: [{ source: '/(.*)', destination: '/index.html' }] },
+              null,
+              2,
+            ) + '\n',
+          );
+        }
+
+        // vercel.json in outDir — for `vercel <outDir>` CLI deployments
+        const outVercel = path.join(outDir, 'vercel.json');
+        if (!fs.existsSync(outVercel)) {
+          fs.writeFileSync(
+            outVercel,
             JSON.stringify({ rewrites: [{ source: '/(.*)', destination: '/index.html' }] }, null, 2) + '\n',
           );
         }
