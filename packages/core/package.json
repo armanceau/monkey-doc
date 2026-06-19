@@ -1,6 +1,6 @@
 {
   "name": "@monkey-doc/core",
-  "version": "1.3.9",
+  "version": "1.3.10",
   "description": "Core utilities for Monkey-Doc — MDX parsing and filesystem scanning",
   "license": "MIT",
   "author": "Arthur Manceau",
