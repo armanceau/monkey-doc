@@ -148,8 +148,25 @@ program
 
     child.on('close', (code) => {
       if (code === 0) {
-        // SPA fallback for Netlify / Cloudflare Pages
-        fs.writeFileSync(path.join(outDir, '_redirects'), '/*  /index.html  200\n');
+        // vercel.json — SPA catch-all rewrite for Vercel
+        const userVercel = path.join(cwd, 'vercel.json');
+        if (fs.existsSync(userVercel)) {
+          fs.copyFileSync(userVercel, path.join(outDir, 'vercel.json'));
+        } else {
+          fs.writeFileSync(
+            path.join(outDir, 'vercel.json'),
+            JSON.stringify({ rewrites: [{ source: '/(.*)', destination: '/index.html' }] }, null, 2) + '\n',
+          );
+        }
+
+        // _redirects — SPA fallback for Netlify / Cloudflare Pages
+        const userRedirects = path.join(cwd, '_redirects');
+        if (fs.existsSync(userRedirects)) {
+          fs.copyFileSync(userRedirects, path.join(outDir, '_redirects'));
+        } else {
+          fs.writeFileSync(path.join(outDir, '_redirects'), '/*  /index.html  200\n');
+        }
+
         // Prevent GitHub Pages from ignoring dotfiles
         fs.writeFileSync(path.join(outDir, '.nojekyll'), '');
 
