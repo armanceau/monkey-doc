@@ -60,6 +60,24 @@ program
       console.log('  Created monkey-doc.config.ts');
     }
 
+    const vercelPath = path.join(cwd, 'vercel.json');
+    if (!fs.existsSync(vercelPath)) {
+      fs.writeFileSync(
+        vercelPath,
+        JSON.stringify(
+          {
+            buildCommand: 'npx monkey-doc build',
+            outputDirectory: 'docs-dist',
+            rewrites: [{ source: '/(.*)', destination: '/index.html' }],
+          },
+          null,
+          2,
+        ) + '\n',
+        'utf-8',
+      );
+      console.log('  Created vercel.json');
+    }
+
     console.log('\nDone! Run `monkey-doc dev` to start your documentation server.');
   });
 
