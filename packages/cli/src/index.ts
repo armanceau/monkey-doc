@@ -151,11 +151,21 @@ program
         // vercel.json at project root — required for Vercel GitHub integration
         // (Vercel reads config from the repo root, not from the output directory)
         const rootVercel = path.join(cwd, 'vercel.json');
-        if (!fs.existsSync(rootVercel)) {
+        const spaRewrite = [{ source: '/(.*)', destination: '/index.html' }];
+        if (fs.existsSync(rootVercel)) {
+          // Merge rewrites into existing file so user buildCommand/outputDirectory are preserved
+          try {
+            const existing = JSON.parse(fs.readFileSync(rootVercel, 'utf8'));
+            if (!existing.rewrites) {
+              existing.rewrites = spaRewrite;
+              fs.writeFileSync(rootVercel, JSON.stringify(existing, null, 2) + '\n');
+            }
+          } catch { /* malformed JSON — leave untouched */ }
+        } else {
           fs.writeFileSync(
             rootVercel,
             JSON.stringify(
-              { outputDirectory: options.output, rewrites: [{ source: '/(.*)', destination: '/index.html' }] },
+              { outputDirectory: options.output, rewrites: spaRewrite },
               null,
               2,
             ) + '\n',
